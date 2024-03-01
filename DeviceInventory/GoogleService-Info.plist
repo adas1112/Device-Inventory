@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyAe8vV5mcFQuTU4o5Gmf5XkWrvyfJ5ylag</string>
+	<key>GCM_SENDER_ID</key>
+	<string>169657910730</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>iflair.DeviceInventory</string>
+	<key>PROJECT_ID</key>
+	<string>deviceinventory-3c702</string>
+	<key>STORAGE_BUCKET</key>
+	<string>deviceinventory-3c702.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:169657910730:ios:053b9df1da0e63f08b7b33</string>
+</dict>
+</plist>

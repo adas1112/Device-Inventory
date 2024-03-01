@@ -1,0 +1,6 @@
+framework module Pods_DeviceInventory {
+  umbrella header "Pods-DeviceInventory-umbrella.h"
+
+  export *
+  module * { export * }
+}

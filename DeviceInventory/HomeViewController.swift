@@ -21,8 +21,8 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.dataSource = self
-        tableView.delegate = self
+//        tableView.dataSource = self
+//        tableView.delegate = self
         fetchUserData()
         
         
@@ -66,12 +66,14 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
               }
 
               // Reload the UITableView to reflect the updated data
-              self.tableView.reloadData()
+//              self.tableView.reloadData()
           }
       }
     
     
 }
+
+//create model struct
 struct User {
     var empNumber: String
     var email: String

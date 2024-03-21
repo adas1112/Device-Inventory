@@ -110,11 +110,13 @@ PODS:
   - nanopb/encode (2.30910.0)
   - PromisesObjC (2.4.0)
   - RecaptchaInterop (100.0.0)
+  - SwiftToast (1.1.3)
 
 DEPENDENCIES:
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
+  - SwiftToast
 
 SPEC REPOS:
   trunk:
@@ -134,6 +136,7 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - RecaptchaInterop
+    - SwiftToast
 
 SPEC CHECKSUMS:
   Firebase: 797fd7297b7e1be954432743a0b3f90038e45a71
@@ -152,7 +155,8 @@ SPEC CHECKSUMS:
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
+  SwiftToast: 029cbeda85c04fb3fa5df774ba461b19971bc6c5
 
-PODFILE CHECKSUM: 72fdf0cc3893c995cd706d834fcaa66016240317
+PODFILE CHECKSUM: 6ae6f6d64b77182f8d75071719e70e81ce0c632b
 
 COCOAPODS: 1.13.0

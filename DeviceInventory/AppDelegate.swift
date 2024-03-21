@@ -13,12 +13,73 @@ import Firebase
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
+    var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
-        return true
-    }
+        
+//        if UserDefaults.standard.bool(forKey: "userLoggedIn") {
+//                  // User is logged in, navigate to the main screen with tab bar controller
+//                  let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+//                  let tabBarController = mainStoryboard.instantiateViewController(withIdentifier: "TabBarViewController")
+//                  window?.rootViewController = tabBarController
+//              } else {
+//                  // No saved user session, navigate to the login screen
+//                  let loginStoryboard = UIStoryboard(name: "Main", bundle: nil)
+//                         let loginViewController = loginStoryboard.instantiateViewController(withIdentifier: "LoginViewController")
+//                         window?.rootViewController = loginViewController
+//
+//              } 
+        
+    
+       
+              return true
+          }
+    
+
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+           // Handle password reset links
+//           handlePasswordResetLink(url: url)
+           
+           return true
+       }
+
+//    func handlePasswordResetLink(url: URL) {
+//        if Auth.auth().isSignIn(withEmailLink: url.absoluteString) {
+//            // User is signing in with a password reset link
+//            if let email = UserDefaults.standard.string(forKey: "email"),
+//               let newPassword = UserDefaults.standard.string(forKey: "password") {
+//
+//                Auth.auth().signIn(withEmail: email, link: url.absoluteString) { authResult, error in
+//                    if let error = error {
+//                        print("Error signing in with password reset link: \(error.localizedDescription)")
+//                        // Show an alert or toast message to inform the user about the error
+//                    } else {
+//                        // Password reset link verified, update password in the Realtime Database
+//                        let user = Auth.auth().currentUser
+//                        let uid = user?.uid ?? ""
+//                        print("User ID: \(uid)")
+//                        let ref = Database.database().reference().child("users").child(uid)
+//                        ref.child("password").setValue(newPassword) { error, _ in
+//                            if let error = error {
+//                                print("Error updating password in the Realtime Database: \(error.localizedDescription)")
+//                                // Show an alert or toast message to inform the user about the error
+//                            } else {
+//                                print("Password updated successfully in the Realtime Database")
+//                                // Show an alert or toast message to inform the user about the password update
+//                            }
+//                        }
+//                    }
+//                }
+//            } else {
+//                print("Error: Missing email or newPassword in UserDefaults")
+//                // Show an alert or toast message to inform the user about the missing data
+//            }
+//        }
+//    }
+
 
     // MARK: UISceneSession Lifecycle
 

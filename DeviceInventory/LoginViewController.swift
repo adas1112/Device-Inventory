@@ -7,12 +7,15 @@
 
 import UIKit
 import Firebase
+import SwiftToast
 
 
 class LoginViewController: UIViewController {
     
+    var isButtonEnabled = true
     
     
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var curveView: UIView!
     
     
@@ -43,6 +46,8 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+      
+        
         // Apply rounded corners to the left and right corners
         let cornerRadius: CGFloat = 60
         let maskPath = UIBezierPath(
@@ -55,13 +60,51 @@ class LoginViewController: UIViewController {
         curveView.layer.mask = maskLayer
         
         textFieldBorder()
+        hideKeyboard()
+        
+        // Add observers for keyboard events
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         
+        txtEmpno.delegate = self
+        txtEmail.delegate = self
+        txtPassword.delegate = self
+        
+//        if UserDefaults.standard.bool(forKey: "userLoggedIn") {
+//              // User is logged in, navigate to the main screen directly
+//              self.performSegue(withIdentifier: "mySegue", sender: nil)
+//          }
+//
         
         
-        
-        
-        
+    }
+    
+    
+    
+    deinit {
+        // Remove keyboard event observers
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    // Function to adjust content inset when keyboard is shown
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+            scrollView.contentInset = contentInsets
+            scrollView.scrollIndicatorInsets = contentInsets
+        }
+    }
+    
+    // Function to reset content inset when keyboard is hidden
+    @objc func keyboardWillHide(_ notification: Notification) {
+        scrollView.contentInset = .zero
+        scrollView.scrollIndicatorInsets = .zero
+    }
+    
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return self.textFieldReturn(textField)
     }
     
     func textFieldBorder(){
@@ -86,81 +129,124 @@ class LoginViewController: UIViewController {
     }
     
     
+    
+    @IBAction func forgetPasswordClick(_ sender: UIButton) {
+        
+        let LoginVc = self.storyboard?.instantiateViewController(withIdentifier: "ForgetPasswordController") as! ForgetPasswordController
+        self.navigationController?.pushViewController(LoginVc, animated: true)
+        
+        
+    }
+    
+    
+    
     @IBAction func buttonLoginClick(_ sender: UIButton) {
         
+      
         
         //Validations of textFields
         if let email = txtEmail.text ,let password = txtPassword.text, let employee = txtEmpno.text{
             if employee == ""{
-                alertView(title: "Alert", message: "Please Enter Employee no", alertStyle: .alert, actionTitles: ["okay"], actionStyles: [.default], actions: [{_ in
-                }])
+                if self.isButtonEnabled {
+                    self.showToastAlert(message: "Enter Employee Number!")
+                    self.isButtonEnabled = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                        self.isButtonEnabled = true
+                    }
+                }
                 
             }else if !email.validateEmailAddress(){
-                alertView(title: "Alert", message: "Please Enter Valid Email", alertStyle: .alert, actionTitles: ["okay"], actionStyles: [.default], actions: [{_ in
-                }])
+                if self.isButtonEnabled {
+                    self.showToastAlert(message: "Enter valid email address!")
+                    self.isButtonEnabled = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                        self.isButtonEnabled = true
+                    }
+                }
                 
             }else if !password.validatePassword(){
-                alertView(title: "Alert", message: "Please Enter Valid Password", alertStyle: .alert, actionTitles: ["okay"], actionStyles: [.default], actions: [{_ in
-                }])
-                
+                if self.isButtonEnabled {
+                    self.showToastAlert(message: "Enter valid password!")
+                    self.isButtonEnabled = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                        self.isButtonEnabled = true
+                    }
+                }
             }
         }
         
         
         guard let empNumber = txtEmpno.text,
-                      let email = txtEmail.text,
-                      let password = txtPassword.text else {
-                    // Handle missing input
-                    return
-                }
+              let email = txtEmail.text,
+              let password = txtPassword.text else {
+            // Handle missing input
+            return
+        }
         
         
+        Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
+            guard let self = self else { return }
+            
+            if let error = error{
+                self.showToastAlert(message: "Enter correct email or password")
+                print("Error :\(error.localizedDescription)")
+            } else if let user = authResult?.user {
+                // Login successful, check employee number in the database
+                self.checkEmployeeNumberMatch(user: user, empNumber: empNumber)
+            }
+        }
+    }
+    
+    
+    func checkEmployeeNumberMatch(user: FirebaseAuth.User, empNumber: String){
         // Reference to the users node in the Realtime Database
-             let usersRef = Database.database().reference().child("users")
-
-             // Query to check if the provided credentials exist in the database
-             let query = usersRef.queryOrdered(byChild: "empNumber").queryEqual(toValue: empNumber)
-
-             query.observeSingleEvent(of: .value) { snapshot in
-                 guard let userSnapshot = snapshot.children.allObjects.first as? DataSnapshot,
-                       let user = userSnapshot.value as? [String: Any],
-                       let storedEmail = user["email"] as? String,
-                       let storedPassword = user["password"] as? String else {
-                     // User not found or unable to retrieve user data
-                     self.alertView(title: "Alert", message: "Employee No not found!", alertStyle: .alert, actionTitles: ["Enter"], actionStyles: [.default], actions: [{_ in
-                     }])
-
-                     return
-                 }
-
-                 // Verify the entered password against the stored hashed password
-                 if email == storedEmail && self.verifyPassword(password, hashedPassword: storedPassword) {
-                     // Passwords match, login successful
-                     self.alertView(title: "Successful!!", message: "Login Successfully!!", alertStyle: .alert, actionTitles: ["Next"], actionStyles: [.default], actions: [{_ in
-                         
-                         let LoginVC = self.storyboard?.instantiateViewController(withIdentifier: "HomeViewController") as! HomeViewController
-                         self.navigationController?.pushViewController(LoginVC, animated: true)
-                     }])
-                     self.txtEmpno.text = ""
-                     self.txtEmail.text = ""
-                     self.txtPassword.text = ""
-                     
-                 } else {
-                     // Passwords don't match
-                     self.alertView(title: "Alert", message: "Enter correct email or password", alertStyle: .alert, actionTitles: ["Enter"], actionStyles: [.default], actions: [{_ in
-                     }])
-
-                 
-                 }
-             }
-         }
-
-         func verifyPassword(_ password: String, hashedPassword: String) -> Bool {
-          
-             return password == hashedPassword
-         }
+        let usersRef = Database.database().reference().child("users")
         
+        // Query to check if the provided credentials exist in the database
+        let query = usersRef.queryOrdered(byChild: "empNumber").queryEqual(toValue: empNumber)
         
+        query.observeSingleEvent(of: .value) { snapshot in
+            guard let userSnapshot = snapshot.children.allObjects.first as? DataSnapshot,
+                  let user = userSnapshot.value as? [String: Any],
+                  let storedEmail = user["email"] as? String
+            else {
+                // User not found or unable to retrieve user data
+                if self.isButtonEnabled {
+                    self.showToastAlert(message: "Employee number not exists!")
+                    self.isButtonEnabled = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                        self.isButtonEnabled = true
+                    }
+                }
+                //
+                return
+            }
+            
+            
+            
+            //                    UserDefaults.standard.set(true, forKey: "userLoggedIn")
+            //                    self.performSegue(withIdentifier: "mySegue", sender: nil)
+            
+            self.txtEmpno.text = ""
+            self.txtEmail.text = ""
+            self.txtPassword.text = ""
+            
+        }
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
+        
+        // This is to get the SceneDelegate object from your view controller
+        // then call the change root view controller function to change to the main tab bar
+        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+            sceneDelegate.changeRootViewController(mainTabBarController)
+        }
+    }
+    
+    
+    
+
+
     
     
     @IBAction func buttonSignUpNavigation(_ sender: UIButton) {
@@ -186,6 +272,31 @@ extension UITextField {
         leftViewMode = .always
     }
 }
+
+extension UIViewController:UITextFieldDelegate{
+    
+    //function for hide keyboard tap on screen
+    func hideKeyboard(){
+        let tap:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dissmissableKeyboard))
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dissmissableKeyboard(){
+        view.endEditing(true)
+    }
+    
+    
+    //click return button to move next field
+    func textFieldReturn(_ textField:UITextField) -> Bool{
+        if let nextButton = self.view.viewWithTag(textField.tag + 1) as? UITextField {
+            nextButton.becomeFirstResponder()
+        }else {
+            textField.resignFirstResponder()
+        }
+        return false
+    }
+}
+
 
 
 

@@ -8,6 +8,7 @@ target 'DeviceInventory' do
 pod 'Firebase/Core'
 pod 'Firebase/Auth'
 pod 'Firebase/Database'
+pod 'SwiftToast'
 
 
 end

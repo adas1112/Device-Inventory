@@ -23,4 +23,7 @@ class SignupFieldsTableViewCell: UITableViewCell {
     @IBOutlet weak var txtDepartmentCell: UILabel!
     
     
+    
+ 
+    
 }

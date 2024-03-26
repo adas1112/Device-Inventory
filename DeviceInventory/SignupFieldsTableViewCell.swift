@@ -24,6 +24,6 @@ class SignupFieldsTableViewCell: UITableViewCell {
     
     
     
- 
+    
     
 }

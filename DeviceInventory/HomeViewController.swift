@@ -21,8 +21,8 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        tableView.dataSource = self
-//        tableView.delegate = self
+        //        tableView.dataSource = self
+        //        tableView.delegate = self
         fetchUserData()
         
         
@@ -42,33 +42,33 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         cell.txtNameCell.text = "Name: \(user.name)"
         cell.txtEmailCell.text = "Email: \(user.email)"
         cell.txtDepartmentCell.text = "Department: \(user.department)"
-
+        
         return cell
     }
     
     func fetchUserData() {
-          let usersRef = Database.database().reference().child("users")
-
-          usersRef.observeSingleEvent(of: .value) { snapshot in
-              guard let userDicts = snapshot.value as? [String: [String: String]] else {
-                  return
-              }
-
-              self.users = userDicts.compactMap { (key, value) in
-                  guard let empNumber = value["empNumber"],
-                        let email = value["email"],
-                        let department = value["department"],
-                        let name = value["name"] else {
-                      return nil
-                  }
-
-                  return User(empNumber: empNumber, email: email, department: department, name: name)
-              }
-
-              // Reload the UITableView to reflect the updated data
-//              self.tableView.reloadData()
-          }
-      }
+        let usersRef = Database.database().reference().child("users")
+        
+        usersRef.observeSingleEvent(of: .value) { snapshot in
+            guard let userDicts = snapshot.value as? [String: [String: String]] else {
+                return
+            }
+            
+            self.users = userDicts.compactMap { (key, value) in
+                guard let empNumber = value["empNumber"],
+                      let email = value["email"],
+                      let department = value["department"],
+                      let name = value["name"] else {
+                    return nil
+                }
+                
+                return User(empNumber: empNumber, email: email, department: department, name: name)
+            }
+            
+            // Reload the UITableView to reflect the updated data
+            //              self.tableView.reloadData()
+        }
+    }
     
     
 }

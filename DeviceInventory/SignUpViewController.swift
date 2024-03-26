@@ -7,7 +7,6 @@ class SignUpViewController: UIViewController {
     var databaseRef: DatabaseReference!
     var isButtonEnabled = true
     
-    
     @IBOutlet weak var backTapped: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
     
@@ -257,102 +256,73 @@ class SignUpViewController: UIViewController {
     
     // Function to check if the email already exists in Firebase
     func checkEmailExistence(email: String,empNumber: String, completion: @escaping (Bool, Bool) -> Void) {
-        let usersRef = Database.database().reference().child("users")
-        
-        let emailQuery = usersRef.queryOrdered(byChild: "email").queryEqual(toValue: email)
-        
-        let empNumberQuery = usersRef.queryOrdered(byChild: "empNumber").queryEqual(toValue: empNumber)
-        
-        let dispatchGroup = DispatchGroup()
-        
-        var emailExists = false
-        var empNumberExists = false
-        
-        dispatchGroup.enter()
-        emailQuery.observeSingleEvent(of: .value) { snapshot in
-            emailExists = snapshot.exists()
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.enter()
-        empNumberQuery.observeSingleEvent(of: .value) { snapshot in
-            empNumberExists = snapshot.exists()
-            dispatchGroup.leave()
-        }
-        
-        dispatchGroup.notify(queue: .main) {
-            // Pass true if either email or employee number exists
-            completion(emailExists, empNumberExists)
+        if let currentUser = Auth.auth().currentUser {
+            let userID = currentUser.uid
+            let usersRef = Database.database().reference().child("users").child(userID)
+            
+            let emailQuery = usersRef.queryOrdered(byChild: "email").queryEqual(toValue: email)
+            
+            let empNumberQuery = usersRef.queryOrdered(byChild: "empNumber").queryEqual(toValue: empNumber)
+            
+            let dispatchGroup = DispatchGroup()
+            
+            var emailExists = false
+            var empNumberExists = false
+            
+            dispatchGroup.enter()
+            emailQuery.observeSingleEvent(of: .value) { snapshot in
+                emailExists = snapshot.exists()
+                dispatchGroup.leave()
+            }
+            
+            dispatchGroup.enter()
+            empNumberQuery.observeSingleEvent(of: .value) { snapshot in
+                empNumberExists = snapshot.exists()
+                dispatchGroup.leave()
+            }
+            
+            dispatchGroup.notify(queue: .main) {
+                // Pass true if either email or employee number exists
+                completion(emailExists, empNumberExists)
+            }
         }
     }
     
     // Function to sign up the user after email existence check
     func signUpUser(name: String, empNumber: String, email: String, department: String, password: String) {
-        let usersRef = Database.database().reference().child("users")
         
         
-        
-        
-        // Obtain values from text fields
-        guard let name = txtName.text,
-              let empNumber = txtEmpno.text,
-              let email = txtEmail.text,
-              let department = txtDepartment.text,
-              let password = txtPassword.text else {
-            return
-        }
-        
-        
-        // Create a data dictionary
-        let data: [String: Any] = [
-            "name": name,
-            "empNumber": empNumber,
-            "email": email,
-            "department": department,
-//            "password": password
-        ]
-        
-        
-        
-        
-        // Proceed with Firebase Authentication sign-up process
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
-            if let error = error {
-                // Error occurred during sign-up
-                if self.isButtonEnabled {
-                    self.showToastAlert(message: "Error occur!")
-                    self.isButtonEnabled = false
-                          DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                              self.isButtonEnabled = true
-                          }
-                      }
-            } else {
-                // Sign-up successful
-//                if self.isButtonEnabled {
-//                    self.showToastAlert(message: "User created successfully!")
-//                    self.isButtonEnabled = false
-//                          DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-//                              self.isButtonEnabled = true
-//                          }
-//                      }                // You can handle further actions after successful sign-up, such as navigating to another screen
-            }
-        }
-        
-        
-        let userReference = databaseRef.child("users").childByAutoId()
-        userReference.setValue(data){
-            (error, ref) in
-            if let err = error {
-                self.alertView(title: "Alert", message: "Data Not Stored", alertStyle: .alert, actionTitles: ["Okay"], actionStyles: [.default], actions: [{_ in}])
-            }else{
-                self.alertView(title: "Successful!!", message: "User Created Successfully!", alertStyle: .alert, actionTitles: ["Login"], actionStyles: [.default], actions: [{_ in
+                if let error = error {
+                    // Error occurred during sign-up
+                    print("Error creating user:", error.localizedDescription)
+                    self.showToastAlert(message: "Error occurred during sign-up")
+                } else if let authResult = authResult {
+                    // User created successfully with Firebase Authentication
+                    let userID = authResult.user.uid // Get the UID from Firebase Authentication
+                    let data: [String: Any] = [
+                        "name": name,
+                        "empNumber": empNumber,
+                        "email": email,
+                        "department": department
+                    ]
                     
-                    self.navigationController?.popViewController(animated: true)
-                }])
+                    let usersRef = Database.database().reference().child("users").child(userID)
+                    usersRef.setValue(data) { error, ref in
+                        if let error = error {
+                            // Error storing user data in the Realtime Database
+                            print("Error storing user data:", error.localizedDescription)
+                            self.showToastAlert(message: "Error storing user data")
+                        } else {
+                            // User data stored successfully in the Realtime Database
+                            self.alertView(title: "Successful!!", message: "User Created Successfully!", alertStyle: .alert, actionTitles: ["Login"], actionStyles: [.default], actions: [{ _ in
+                                self.navigationController?.popViewController(animated: true)
+                            }])
+                        }
+                    }
+                }
             }
-        }
     }
-    
     
     @IBAction func buttonLoginNavigation(_ sender: UIButton) {
         

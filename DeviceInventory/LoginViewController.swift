@@ -46,7 +46,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-      
+        
         
         // Apply rounded corners to the left and right corners
         let cornerRadius: CGFloat = 60
@@ -70,12 +70,6 @@ class LoginViewController: UIViewController {
         txtEmpno.delegate = self
         txtEmail.delegate = self
         txtPassword.delegate = self
-        
-//        if UserDefaults.standard.bool(forKey: "userLoggedIn") {
-//              // User is logged in, navigate to the main screen directly
-//              self.performSegue(withIdentifier: "mySegue", sender: nil)
-//          }
-//
         
         
     }
@@ -142,8 +136,6 @@ class LoginViewController: UIViewController {
     
     @IBAction func buttonLoginClick(_ sender: UIButton) {
         
-      
-        
         //Validations of textFields
         if let email = txtEmail.text ,let password = txtPassword.text, let employee = txtEmpno.text{
             if employee == ""{
@@ -199,54 +191,53 @@ class LoginViewController: UIViewController {
     
     
     func checkEmployeeNumberMatch(user: FirebaseAuth.User, empNumber: String){
+        
+        UserDefaults.standard.set(user.displayName, forKey: "username")
+         UserDefaults.standard.synchronize()
         // Reference to the users node in the Realtime Database
-        let usersRef = Database.database().reference().child("users")
-        
-        // Query to check if the provided credentials exist in the database
-        let query = usersRef.queryOrdered(byChild: "empNumber").queryEqual(toValue: empNumber)
-        
-        query.observeSingleEvent(of: .value) { snapshot in
-            guard let userSnapshot = snapshot.children.allObjects.first as? DataSnapshot,
-                  let user = userSnapshot.value as? [String: Any],
-                  let storedEmail = user["email"] as? String
-            else {
-                // User not found or unable to retrieve user data
-                if self.isButtonEnabled {
-                    self.showToastAlert(message: "Employee number not exists!")
-                    self.isButtonEnabled = false
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                        self.isButtonEnabled = true
+        if let currentUser = Auth.auth().currentUser {
+            let userID = currentUser.uid
+            let usersRef = Database.database().reference().child("users").child(userID)
+            
+            // Query to check if the provided credentials exist in the database
+            let query = usersRef.queryOrdered(byChild: "empNumber").queryEqual(toValue: empNumber)
+            
+            query.observeSingleEvent(of: .value) { snapshot in
+                guard let userSnapshot = snapshot.children.allObjects.first as? DataSnapshot,
+                      let user = userSnapshot.value as? [String: Any],
+                      let storedEmail = user["email"] as? String
+                else {
+                    // User not found or unable to retrieve user data
+                    if self.isButtonEnabled {
+                        self.showToastAlert(message: "Employee number not exists!")
+                        self.isButtonEnabled = false
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                            self.isButtonEnabled = true
+                        }
                     }
+                    //
+                    return
                 }
-                //
-                return
+                
+                self.txtEmpno.text = ""
+                self.txtEmail.text = ""
+                self.txtPassword.text = ""
+                
             }
             
+
+            
+         
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+               let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
+            //            self.navigationController?.pushViewController(mainTabBarController, animated: true)
+               (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
+
             
             
-            //                    UserDefaults.standard.set(true, forKey: "userLoggedIn")
-            //                    self.performSegue(withIdentifier: "mySegue", sender: nil)
-            
-            self.txtEmpno.text = ""
-            self.txtEmail.text = ""
-            self.txtPassword.text = ""
-            
-        }
-        
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
-        
-        // This is to get the SceneDelegate object from your view controller
-        // then call the change root view controller function to change to the main tab bar
-        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
-            sceneDelegate.changeRootViewController(mainTabBarController)
         }
     }
-    
-    
-    
-
-
     
     
     @IBAction func buttonSignUpNavigation(_ sender: UIButton) {
@@ -256,8 +247,6 @@ class LoginViewController: UIViewController {
         navigationController?.pushViewController(LoginVC, animated: true)
         
     }
-    
-    
 }
 
 extension UITextField {

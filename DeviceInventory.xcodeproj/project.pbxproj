@@ -11,6 +11,7 @@
 		9C5B0E372B91A9FE006D3D6B /* ValidationRegex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5B0E362B91A9FE006D3D6B /* ValidationRegex.swift */; };
 		9C5B0E392B91B2E4006D3D6B /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5B0E382B91B2E4006D3D6B /* AlertController.swift */; };
 		9CA38CD72BA05B8400E566E3 /* ForgetPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA38CD62BA05B8400E566E3 /* ForgetPasswordController.swift */; };
+		9CA5F8382BADAC2600B442E3 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA5F8372BADAC2600B442E3 /* EditProfileViewController.swift */; };
 		9CAC7BED2B970772005A202F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9CAC7BEC2B970772005A202F /* GoogleService-Info.plist */; };
 		9CB8C8332B95DE0100DA8BF9 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CB8C8322B95DE0100DA8BF9 /* SignUpViewController.swift */; };
 		9CBA52102B8F57A800553DFF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBA520F2B8F57A800553DFF /* AppDelegate.swift */; };
@@ -30,6 +31,7 @@
 		9C5B0E362B91A9FE006D3D6B /* ValidationRegex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationRegex.swift; sourceTree = "<group>"; };
 		9C5B0E382B91B2E4006D3D6B /* AlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
 		9CA38CD62BA05B8400E566E3 /* ForgetPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetPasswordController.swift; sourceTree = "<group>"; };
+		9CA5F8372BADAC2600B442E3 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		9CAC7BEC2B970772005A202F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		9CB8C8322B95DE0100DA8BF9 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		9CBA520C2B8F57A800553DFF /* DeviceInventory.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeviceInventory.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -99,6 +101,7 @@
 				9CA38CD62BA05B8400E566E3 /* ForgetPasswordController.swift */,
 				9CD711B72B98388E000DBFFA /* HomeViewController.swift */,
 				9CBA52152B8F57A800553DFF /* Main.storyboard */,
+				9CA5F8372BADAC2600B442E3 /* EditProfileViewController.swift */,
 				9CDD24422BAC0D6A000D60B3 /* ProfileViewController.swift */,
 				9CD711B92B98902F000DBFFA /* SignupFieldsTableViewCell.swift */,
 				9CBA521B2B8F57AA00553DFF /* Assets.xcassets */,
@@ -250,6 +253,7 @@
 				9CA38CD72BA05B8400E566E3 /* ForgetPasswordController.swift in Sources */,
 				9CDD24432BAC0D6A000D60B3 /* ProfileViewController.swift in Sources */,
 				9CBA65FE2B95A3360023F3EE /* LoginViewController.swift in Sources */,
+				9CA5F8382BADAC2600B442E3 /* EditProfileViewController.swift in Sources */,
 				9C5B0E392B91B2E4006D3D6B /* AlertController.swift in Sources */,
 				9CB8C8332B95DE0100DA8BF9 /* SignUpViewController.swift in Sources */,
 				9CBA52122B8F57A800553DFF /* SceneDelegate.swift in Sources */,

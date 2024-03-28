@@ -13,6 +13,7 @@ class ForgetPasswordController: UIViewController {
     
     var isButtonEnabled = true
     
+    @IBOutlet weak var backTapped: UIImageView!
     
     @IBOutlet weak var curveView: UIView!
     
@@ -31,12 +32,11 @@ class ForgetPasswordController: UIViewController {
     {
         didSet {
             txtEmpNo.tintColor = UIColor.gray
-            txtEmpNo.setIcon(UIImage(imageLiteralResourceName: "password1"))
+            txtEmpNo.setIcon(UIImage(imageLiteralResourceName: "employee1"))
         }
     }
     
     
-    @IBOutlet weak var backImage: UIImageView!
     
     
     override func viewDidLoad() {
@@ -47,9 +47,7 @@ class ForgetPasswordController: UIViewController {
         
         
         //Back Icon Navigation Using Tap Gestures
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
-        backImage.isUserInteractionEnabled = true
-        backImage.addGestureRecognizer(tapGesture)
+       
         
         
         // Apply rounded corners to the left and right corners
@@ -66,12 +64,19 @@ class ForgetPasswordController: UIViewController {
         textFieldBorder()
         hideKeyboard()
         
+        //Back Icon Navigation Using Tap Gestures
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
+        backTapped.isUserInteractionEnabled = true
+        backTapped.addGestureRecognizer(tapGesture)
+        
+        
     }
-    
     
     @objc func imageViewTapped() {
         navigationController?.popViewController(animated: true)
     }
+    
+  
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return self.textFieldReturn(textField)
@@ -96,17 +101,24 @@ class ForgetPasswordController: UIViewController {
     }
     
     
+    
+    @IBAction func doneClick(_ sender: Any) {
+        self.dismiss(animated: true)
+    }
+    
+    
+    
     @IBAction func resetButtonClick(_ sender: UIButton) {
         guard let email = txtEmail.text?.trimmingCharacters(in: .whitespacesAndNewlines),
               let employeeNumber = txtEmpNo.text?.trimmingCharacters(in: .whitespacesAndNewlines),
               !email.isEmpty, !employeeNumber.isEmpty else {
-            showToastAlert(message: "Please enter your email and employee number.")
+            showToastAlert(message: "Enter email and emp no.")
             return
         }
         
         // Verify email address format
         if !email.validateEmailAddress() {
-            showToastAlert(message: "Please enter a valid email address.")
+            showToastAlert(message: "Enter a valid email address.")
             return
         }
         
@@ -128,11 +140,13 @@ class ForgetPasswordController: UIViewController {
                     if let error = error {
                         self.showToastAlert(message: "Error resetting password: \(error.localizedDescription)")
                     } else {
-                        self.showToastAlert(message: "Password reset email sent. Check your email inbox.")
+                        self.showToastAlert(message: "Reset password email sent.")
+                        self.txtEmail.text = ""
+                        self.txtEmpNo.text = ""
                     }
                 }
             } else {
-                self.showToastAlert(message: "Invalid email or employee number.")
+                self.showToastAlert(message: "Invalid email or emp number.")
             }
         })
     }

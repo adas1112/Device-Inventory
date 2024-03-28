@@ -13,8 +13,7 @@ import SwiftToast
 class LoginViewController: UIViewController {
     
     var isButtonEnabled = true
-    
-    
+  
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var curveView: UIView!
     
@@ -46,7 +45,9 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+      
         
+        txtPassword.enablePasswordToggle()
         
         // Apply rounded corners to the left and right corners
         let cornerRadius: CGFloat = 60
@@ -80,7 +81,7 @@ class LoginViewController: UIViewController {
         // Remove keyboard event observers
         NotificationCenter.default.removeObserver(self)
     }
-    
+   
     // Function to adjust content inset when keyboard is shown
     @objc func keyboardWillShow(_ notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -128,8 +129,6 @@ class LoginViewController: UIViewController {
         
         let LoginVc = self.storyboard?.instantiateViewController(withIdentifier: "ForgetPasswordController") as! ForgetPasswordController
         self.navigationController?.pushViewController(LoginVc, animated: true)
-        
-        
     }
     
     
@@ -158,7 +157,7 @@ class LoginViewController: UIViewController {
                 
             }else if !password.validatePassword(){
                 if self.isButtonEnabled {
-                    self.showToastAlert(message: "Enter valid password!")
+//                    self.showToastAlert(message: "Enter valid password!")
                     self.isButtonEnabled = false
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                         self.isButtonEnabled = true
@@ -193,7 +192,7 @@ class LoginViewController: UIViewController {
     func checkEmployeeNumberMatch(user: FirebaseAuth.User, empNumber: String){
         
         UserDefaults.standard.set(user.displayName, forKey: "username")
-         UserDefaults.standard.synchronize()
+        UserDefaults.standard.synchronize()
         // Reference to the users node in the Realtime Database
         if let currentUser = Auth.auth().currentUser {
             let userID = currentUser.uid
@@ -225,15 +224,15 @@ class LoginViewController: UIViewController {
                 
             }
             
-
             
-         
+            
+            
             
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
-               let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
+            let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
             //            self.navigationController?.pushViewController(mainTabBarController, animated: true)
-               (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
-
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
+            
             
             
         }
@@ -285,8 +284,49 @@ extension UIViewController:UITextFieldDelegate{
         return false
     }
 }
+//
 
+extension UITextField {
+    fileprivate func setPasswordToggleImage(_ button: UIButton) {
+        if isSecureTextEntry {
+            button.setImage(UIImage(named: "eye_invisible"), for: .normal)
+        } else {
+            button.setImage(UIImage(named: "eye_visible"), for: .normal)
+        }
+    }
 
+    func enablePasswordToggle() {
+        let button = UIButton(type: .custom)
+        setPasswordToggleImage(button)
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -35, bottom: 0, right: 0)
+        button.frame = CGRect(x: self.frame.size.width - 25, y: 5, width: 25, height: 25)
+        button.addTarget(self, action: #selector(togglePasswordView), for: .touchUpInside)
+        self.rightView = button
+        self.rightViewMode = .always
+    }
 
+    @objc func togglePasswordView(_ sender: Any) {
+        if isSecureTextEntry {
+            showText()
+        } else {
+            hideText()
+        }
+        setPasswordToggleImage(sender as! UIButton)
+    }
 
+    private func showText() {
+        guard let text = self.text else { return }
+        let tempText = self.text
+        self.isSecureTextEntry = false
+        self.text = ""
+        self.text = tempText
+    }
 
+    private func hideText() {
+        guard let text = self.text else { return }
+        let tempText = self.text
+        self.isSecureTextEntry = true
+        self.text = ""
+        self.text = tempText
+    }
+}

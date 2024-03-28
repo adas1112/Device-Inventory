@@ -7,6 +7,10 @@ class EditProfileViewController: UIViewController {
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var curveView: UIView!
     
+    
+    @IBOutlet weak var backTap: UIImageView!
+    
+    
     let ref = Database.database().reference()
     
     @IBOutlet weak var txtName: UITextField!{
@@ -37,6 +41,9 @@ class EditProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        hideKeyboard()
+        
+        
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = saveButton.bounds // Set the frame to match the button's bounds
         
@@ -66,6 +73,15 @@ class EditProfileViewController: UIViewController {
         curveView.layer.mask = maskLayer
         
         fetchUserData()
+        
+        //Back Icon Navigation Using Tap Gestures
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
+        backTap.isUserInteractionEnabled = true
+        backTap.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func imageViewTapped() {
+        navigationController?.popViewController(animated: true)
     }
     
     @IBAction func doneClick(_ sender: Any) {
@@ -91,7 +107,7 @@ class EditProfileViewController: UIViewController {
             if let error = error {
                 print("Error updating user data: \(error.localizedDescription)")
             } else {
-                print("User data updated successfully")
+                self.showToastAlert(message: "Data updated successfully")
             }
         }
     }

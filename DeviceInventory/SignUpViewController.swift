@@ -6,6 +6,7 @@ class SignUpViewController: UIViewController {
     // Firebase reference
     var databaseRef: DatabaseReference!
     var isButtonEnabled = true
+    var imageURL = ""
     
     @IBOutlet weak var backTapped: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -60,6 +61,9 @@ class SignUpViewController: UIViewController {
         
         textFieldBoreder()
         hideKeyboard()
+        
+        txtPassword.enablePasswordToggle()
+        txtConPass.enablePasswordToggle()
         
         // Add observers for keyboard events
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -203,7 +207,7 @@ class SignUpViewController: UIViewController {
                 
             }else if !password.validatePassword(){
                 if self.isButtonEnabled {
-                    self.showToastAlert(message: "Enter valid password")
+                    self.showToastAlert(message: "Min 4 character and 4 number")
                     self.isButtonEnabled = false
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                         self.isButtonEnabled = true
@@ -256,10 +260,8 @@ class SignUpViewController: UIViewController {
     
     // Function to check if the email already exists in Firebase
     func checkEmailExistence(email: String,empNumber: String, completion: @escaping (Bool, Bool) -> Void) {
-        if let currentUser = Auth.auth().currentUser {
-            let userID = currentUser.uid
-            let usersRef = Database.database().reference().child("users").child(userID)
-            
+       
+            let usersRef = Database.database().reference().child("users")
             let emailQuery = usersRef.queryOrdered(byChild: "email").queryEqual(toValue: email)
             
             let empNumberQuery = usersRef.queryOrdered(byChild: "empNumber").queryEqual(toValue: empNumber)
@@ -286,7 +288,7 @@ class SignUpViewController: UIViewController {
                 completion(emailExists, empNumberExists)
             }
         }
-    }
+    
     
     // Function to sign up the user after email existence check
     func signUpUser(name: String, empNumber: String, email: String, department: String, password: String) {
@@ -304,7 +306,8 @@ class SignUpViewController: UIViewController {
                         "name": name,
                         "empNumber": empNumber,
                         "email": email,
-                        "department": department
+                        "department": department,
+                        "imageURL": self.imageURL
                     ]
                     
                     let usersRef = Database.database().reference().child("users").child(userID)

@@ -8,24 +8,20 @@
 import UIKit
 import Firebase
 import FirebaseStorage
+import AVFoundation
 
 class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     
     var databaseRef: DatabaseReference!
-    
+    var cameraAccessDeniedOnce = false
     
     @IBOutlet weak var progressView: UIActivityIndicatorView!
-    
     @IBOutlet weak var curveView: UIView!
-    
     @IBOutlet weak var EditProfileButton: UIButton!
-    
     @IBOutlet weak var changePass: UIButton!
-    
     @IBOutlet weak var logOut: UIButton!
-    
     @IBOutlet weak var lblWelcome: UILabel!
-    
+    @IBOutlet weak var cameraIcon: UIImageView!
     @IBOutlet weak var circularImage: UIImageView!
     
     override func viewDidLoad() {
@@ -33,6 +29,15 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         
         circularImage.layer.cornerRadius = circularImage.frame.width / 2
         circularImage.clipsToBounds = true
+        
+        // Set up camera icon view
+        cameraIcon.layer.cornerRadius = cameraIcon.frame.width / 2
+        cameraIcon.clipsToBounds = true
+        cameraIcon.image = UIImage(named: "camera") // Replace "camera_icon" with your actual image name
+        cameraIcon.layer.opacity = 0.7 // Adjust the opacity as needed
+        
+        // Calculate icon size based on the device's screen width
+        let screenWidth = UIScreen.main.bounds.width
         
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecodnizer:)))
@@ -65,16 +70,16 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         fetchUserName()
         
         progressView.isHidden = true
-
+        
         loadProfileImageFromFirebase()
-     
+        
     }
     
     func loadProfileImageFromFirebase() {
         progressView.isHidden = false
-
+        
         progressView.startAnimating()
-
+        
         if let currentUser = Auth.auth().currentUser {
             let userID = currentUser.uid
             let storageRef = Storage.storage().reference().child("user images").child(userID)
@@ -89,27 +94,27 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
                                 self.circularImage.image = image
                                 self.progressView.stopAnimating()
                                 self.progressView.isHidden = true // Hide activity indicator
-
+                                
                             }
                         }
                     }.resume()
                 } else {
                     print("Error fetching profile image URL:", error?.localizedDescription ?? "")
                     DispatchQueue.main.async {
-                                       self.progressView.stopAnimating()
+                        self.progressView.stopAnimating()
                         self.progressView.isHidden = true // Hide activity indicator
-
-                                   }
+                        
+                    }
                 }
             }
         }
     }
-
+    
     func fetchUserName() {
         if let currentUser = Auth.auth().currentUser {
             let userID = currentUser.uid
             let usersRef = databaseRef.child("users").child(userID)
-
+            
             // Observe changes to the user's data
             usersRef.observe(.value) { snapshot in
                 if let userData = snapshot.value as? [String: Any],
@@ -122,78 +127,130 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         }
     }
     
-    
-    func loadProfileImage(withURL imageURL: URL) {
-            URLSession.shared.dataTask(with: imageURL) { (data, response, error) in
-                if let data = data, let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self.circularImage.image = image
-                    }
-                }
-            }.resume()
-        
-        
-      
-
-        }
-    
-    
     @objc func imageTapped(tapGestureRecodnizer: UITapGestureRecognizer){
-        openGallery()
-        print("Tapped")
+        let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        // Camera action
+        let cameraAction = UIAlertAction(title: "Take Photo", style: .default) { _ in
+            self.openCamera()
+        }
+        
+        // Photo Library action
+        let photoLibraryAction = UIAlertAction(title: "Choose Photo", style: .default) { _ in
+            self.openGallery()
+        }
+        
+        // Cancel action
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        
+        // Add actions to the action sheet
+        actionSheet.addAction(cameraAction)
+        actionSheet.addAction(photoLibraryAction)
+        actionSheet.addAction(cancelAction)
+        
+        // Present the action sheet
+        present(actionSheet, animated: true, completion: nil)
         
     }
     
     @IBAction func editInformationClick(_ sender: UIButton) {
         
         let ProfileVC = self.storyboard?.instantiateViewController(withIdentifier: "EditProfileViewController") as! EditProfileViewController
-        ProfileVC.hidesBottomBarWhenPushed = true
-
+        //        ProfileVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(ProfileVC, animated: true)
-
-   
+        
     }
-    
-//
-//    @IBAction func uploadImageClick(_ sender: UIButton) {
-//
-//        self.uploadImage(self.circularImage.image!){url in
-//            self.saveImage(profileURL: url!){success in
-//                if success != nil {
-//                    print("Got it")
-//                }
-//            }
-//        }
-//    }
-    
     
     @IBAction func changePasswordClick(_ sender: UIButton) {
-        
         let ProfileVC = self.storyboard?.instantiateViewController(withIdentifier: "ForgetPasswordController") as! ForgetPasswordController
         self.navigationController?.pushViewController(ProfileVC, animated: true)
-        
-        
     }
-    
-    
     
     @IBAction func logoutClick(_ sender: Any) {
-        do {
-                try Auth.auth().signOut()
-                UserDefaults.standard.removeObject(forKey: "username")
-                UserDefaults.standard.synchronize()
-                
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let loginNavController = storyboard.instantiateViewController(identifier: "LoginNavigationController")
-                
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavController)
-            } catch let signOutError as NSError {
-                print("Error signing out: \(signOutError.localizedDescription)")
-            }
+        
+        // Create an alert controller
+        let alertController = UIAlertController(title: "Logout", message: "Are you sure you want to logout?", preferredStyle: .alert)
+        
+        // Add actions to the alert controller
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let logoutAction = UIAlertAction(title: "Logout", style: .destructive) { _ in
+            // Perform logout action
+            self.performLogout()
+        }
+        
+        // Add actions to the alert controller
+        alertController.addAction(cancelAction)
+        alertController.addAction(logoutAction)
+        
+        // Present the alert controller
+        present(alertController, animated: true, completion: nil)
         
     }
+    func performLogout() {
+        do {
+            try Auth.auth().signOut()
+            UserDefaults.standard.removeObject(forKey: "username")
+            UserDefaults.standard.synchronize()
+            
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let loginNavController = storyboard.instantiateViewController(identifier: "LoginNavigationController")
+            
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(loginNavController)
+        } catch let signOutError as NSError {
+            print("Error signing out: \(signOutError.localizedDescription)")
+        }
+    }
 }
+
+
 extension ProfileViewController: UINavigationBarDelegate, UIImagePickerControllerDelegate{
+    func openCamera() {
+         let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
+         switch cameraAuthorizationStatus {
+         case .authorized:
+             showImagePicker()
+         case .notDetermined:
+             // Request camera access
+             AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+                 if granted {
+                     DispatchQueue.main.async {
+                         self?.showImagePicker()
+                     }
+                 } else {
+                     DispatchQueue.main.async {
+                         self?.showPermissionPrompt()
+                     }
+                 }
+             }
+         case .denied, .restricted:
+             showPermissionPrompt()
+         @unknown default:
+             showPermissionPrompt()
+         }
+     }
+
+     func showPermissionPrompt() {
+         let alert = UIAlertController(title: "Camera Access Denied", message: "To enable camera access, please go to Settings > Privacy > Camera and enable access for this app.", preferredStyle: .alert)
+         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+         alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
+             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+         }))
+         present(alert, animated: true, completion: nil)
+     }
+
+    func showImagePicker() {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = .camera
+            imagePicker.allowsEditing = true
+            present(imagePicker, animated: true, completion: nil)
+        } else {
+            showToastAlert(message: "Camera is not available")
+        }
+    }
+
+    
     func openGallery(){
         if  UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
             let picker = UIImagePickerController()
@@ -264,6 +321,5 @@ extension ProfileViewController{
             completion(false) // Notify the caller that the operation failed
         }
     }
-
-    }
+}
 

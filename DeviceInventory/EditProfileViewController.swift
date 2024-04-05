@@ -6,11 +6,8 @@ class EditProfileViewController: UIViewController {
     
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var curveView: UIView!
-    
-    
     @IBOutlet weak var backTap: UIImageView!
-    
-    
+
     let ref = Database.database().reference()
     
     @IBOutlet weak var txtName: UITextField!{
@@ -19,12 +16,7 @@ class EditProfileViewController: UIViewController {
             txtName.setIcon(UIImage(imageLiteralResourceName: "name1"))
         }
     }
-    @IBOutlet weak var txtEmail: UITextField!{
-        didSet{
-            txtEmail.tintColor = UIColor(red: 40/255.0, green: 67/255.0, blue: 135/255.0, alpha: 1.0)
-            txtEmail.setIcon(UIImage(imageLiteralResourceName: "email1"))
-        }
-    }
+ 
     @IBOutlet weak var txtEmpNo: UITextField!{
         didSet{
             txtEmpNo.tintColor = UIColor(red: 40/255.0, green: 67/255.0, blue: 135/255.0, alpha: 1.0)
@@ -42,8 +34,7 @@ class EditProfileViewController: UIViewController {
         super.viewDidLoad()
         
         hideKeyboard()
-        
-        
+
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = saveButton.bounds // Set the frame to match the button's bounds
         
@@ -98,7 +89,6 @@ class EditProfileViewController: UIViewController {
         
         let userData: [String: Any] = [
             "name": txtName.text ?? "",
-            "email": txtEmail.text ?? "",
             "empNumber": txtEmpNo.text ?? "",
             "department": txtDepartment.text ?? ""
         ]
@@ -107,7 +97,13 @@ class EditProfileViewController: UIViewController {
             if let error = error {
                 print("Error updating user data: \(error.localizedDescription)")
             } else {
+                
                 self.showToastAlert(message: "Data updated successfully")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                       // Navigate back (pop screen)
+                       self.navigationController?.popViewController(animated: true)
+                   }
+               
             }
         }
     }
@@ -127,13 +123,13 @@ class EditProfileViewController: UIViewController {
             }
             
             if let empNumber = userData["empNumber"],
-               let email = userData["email"],
+//               let email = userData["email"],
                let department = userData["department"],
                let name = userData["name"] {
                 DispatchQueue.main.async { [weak self] in
                     // Update UI with user details
                     self?.txtEmpNo.text = empNumber
-                    self?.txtEmail.text = email
+//                    self?.txtEmail.text = email
                     self?.txtDepartment.text = department
                     self?.txtName.text = name
                 }

@@ -10,14 +10,9 @@ import Firebase
 
 class ForgetPasswordController: UIViewController {
     
-    
     var isButtonEnabled = true
-    
     @IBOutlet weak var backTapped: UIImageView!
-    
     @IBOutlet weak var curveView: UIView!
-    
-    
     
     @IBOutlet weak var txtEmail: UITextField!
     {
@@ -27,7 +22,6 @@ class ForgetPasswordController: UIViewController {
         }
     }
     
-    
     @IBOutlet weak var txtEmpNo: UITextField!
     {
         didSet {
@@ -36,19 +30,11 @@ class ForgetPasswordController: UIViewController {
         }
     }
     
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         txtEmail.delegate = self
         txtEmpNo.delegate = self
-        
-        
-        //Back Icon Navigation Using Tap Gestures
-       
-        
         
         // Apply rounded corners to the left and right corners
         let cornerRadius: CGFloat = 60
@@ -61,7 +47,6 @@ class ForgetPasswordController: UIViewController {
         maskLayer.path = maskPath.cgPath
         curveView.layer.mask = maskLayer
         
-        textFieldBorder()
         hideKeyboard()
         
         //Back Icon Navigation Using Tap Gestures
@@ -69,63 +54,49 @@ class ForgetPasswordController: UIViewController {
         backTapped.isUserInteractionEnabled = true
         backTapped.addGestureRecognizer(tapGesture)
         
-        
     }
     
     @objc func imageViewTapped() {
         navigationController?.popViewController(animated: true)
     }
     
-  
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return self.textFieldReturn(textField)
     }
-    
-    func textFieldBorder(){
-        
-        
-        txtEmail.layer.borderColor = UIColor.gray.cgColor
-        txtEmail.layer.borderWidth = 1.5
-        txtEmail.layer.cornerRadius = 25.0
-        txtEmail.clipsToBounds = true
-        
-        txtEmpNo.layer.borderColor = UIColor.gray.cgColor
-        txtEmpNo.layer.borderWidth = 1.5
-        txtEmpNo.layer.cornerRadius = 25.0
-        txtEmpNo.clipsToBounds = true
-        
-        
-        
-        
-    }
-    
-    
     
     @IBAction func doneClick(_ sender: Any) {
         self.dismiss(animated: true)
     }
     
-    
-    
     @IBAction func resetButtonClick(_ sender: UIButton) {
         guard let email = txtEmail.text?.trimmingCharacters(in: .whitespacesAndNewlines),
               let employeeNumber = txtEmpNo.text?.trimmingCharacters(in: .whitespacesAndNewlines),
               !email.isEmpty, !employeeNumber.isEmpty else {
-            showToastAlert(message: "Enter email and emp no.")
+            if self.isButtonEnabled {
+                self.showToastAlert(message: "Enter email and emp number!")
+                self.isButtonEnabled = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                    self.isButtonEnabled = true
+                }
+            }
             return
         }
         
         // Verify email address format
         if !email.validateEmailAddress() {
-            showToastAlert(message: "Enter a valid email address.")
+            if self.isButtonEnabled {
+                self.showToastAlert(message: "Enter valid email address")
+                self.isButtonEnabled = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                    self.isButtonEnabled = true
+                }
+            }
             return
         }
         
         // Check if employee number matches in the database
         checkEmployeeNumberMatch(email: email, employeeNumber: employeeNumber)
     }
-    
     
     func checkEmployeeNumberMatch(email: String, employeeNumber: String) {
         // Assuming your Firebase Realtime Database structure has a 'users' node with employee numbers stored as a child node
@@ -140,18 +111,28 @@ class ForgetPasswordController: UIViewController {
                     if let error = error {
                         self.showToastAlert(message: "Error resetting password: \(error.localizedDescription)")
                     } else {
-                        self.showToastAlert(message: "Reset password email sent.")
+                        if self.isButtonEnabled {
+                            self.showToastAlert(message: "Reset password email sent!")
+                            self.isButtonEnabled = false
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                                self.isButtonEnabled = true
+                            }
+                        }
                         self.txtEmail.text = ""
                         self.txtEmpNo.text = ""
                     }
                 }
             } else {
-                self.showToastAlert(message: "Invalid email or emp number.")
+                if self.isButtonEnabled {
+                    self.showToastAlert(message: "Invalid email or emp number!")
+                    self.isButtonEnabled = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                        self.isButtonEnabled = true
+                    }
+                }
             }
         })
     }
-    
-    
 }
 
 

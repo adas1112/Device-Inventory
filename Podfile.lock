@@ -1,4 +1,5 @@
 PODS:
+  - BEMCheckBox (1.4.1)
   - Firebase/Auth (10.22.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 10.22.0)
@@ -125,6 +126,7 @@ PODS:
   - SwiftToast (1.1.3)
 
 DEPENDENCIES:
+  - BEMCheckBox
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
@@ -133,6 +135,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - BEMCheckBox
     - Firebase
     - FirebaseAnalytics
     - FirebaseAppCheckInterop
@@ -155,6 +158,7 @@ SPEC REPOS:
     - SwiftToast
 
 SPEC CHECKSUMS:
+  BEMCheckBox: 5ba6e37ade3d3657b36caecc35c8b75c6c2b1a4e
   Firebase: 797fd7297b7e1be954432743a0b3f90038e45a71
   FirebaseAnalytics: 8d0ff929c63b7f72260f332b86ccf569776b75d3
   FirebaseAppCheckInterop: 58db3e9494751399cf3e7b7e3e705cff71099153
@@ -176,6 +180,6 @@ SPEC CHECKSUMS:
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
   SwiftToast: 029cbeda85c04fb3fa5df774ba461b19971bc6c5
 
-PODFILE CHECKSUM: 69498c3cd1a4bddd43810127e9bcb75700776ce8
+PODFILE CHECKSUM: d878459615ef665e82e1967f9d2b4f94e528b258
 
 COCOAPODS: 1.13.0

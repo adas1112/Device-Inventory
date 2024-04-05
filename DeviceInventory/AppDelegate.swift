@@ -18,29 +18,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
         FirebaseApp.configure()
-    
-//        
-//        Auth.auth().addStateDidChangeListener { auth, user in
-//            if let user = user {
-//                // User is signed in
-//                print("User is signed in with uid: \(user.uid)")
-//                
-//            } else {
-//                // User is signed out
-//                print("User is signed out")
-//               
-//            }
-//        }
-//        
-        
         return true
     }
     
     
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        // Handle password reset links
-        //           handlePasswordResetLink(url: url)
         
         return true
     }

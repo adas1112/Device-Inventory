@@ -13,11 +13,9 @@ import SwiftToast
 class LoginViewController: UIViewController {
     
     var isButtonEnabled = true
-  
+    
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var curveView: UIView!
-    
-    
     @IBOutlet weak var txtEmpno: UITextField!
     {
         didSet {
@@ -25,7 +23,6 @@ class LoginViewController: UIViewController {
             txtEmpno.setIcon(UIImage(imageLiteralResourceName: "employee1"))
         }
     }
-    
     
     @IBOutlet weak var txtEmail: UITextField!{
         didSet {
@@ -44,8 +41,6 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-      
         
         txtPassword.enablePasswordToggle()
         
@@ -67,21 +62,16 @@ class LoginViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
-        
         txtEmpno.delegate = self
         txtEmail.delegate = self
         txtPassword.delegate = self
-        
-        
     }
-    
-    
     
     deinit {
         // Remove keyboard event observers
         NotificationCenter.default.removeObserver(self)
     }
-   
+    
     // Function to adjust content inset when keyboard is shown
     @objc func keyboardWillShow(_ notification: Notification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -96,7 +86,6 @@ class LoginViewController: UIViewController {
         scrollView.contentInset = .zero
         scrollView.scrollIndicatorInsets = .zero
     }
-    
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         return self.textFieldReturn(textField)
@@ -123,15 +112,10 @@ class LoginViewController: UIViewController {
         
     }
     
-    
-    
     @IBAction func forgetPasswordClick(_ sender: UIButton) {
-        
         let LoginVc = self.storyboard?.instantiateViewController(withIdentifier: "ForgetPasswordController") as! ForgetPasswordController
         self.navigationController?.pushViewController(LoginVc, animated: true)
     }
-    
-    
     
     @IBAction func buttonLoginClick(_ sender: UIButton) {
         
@@ -145,7 +129,6 @@ class LoginViewController: UIViewController {
                         self.isButtonEnabled = true
                     }
                 }
-                
             }else if !email.validateEmailAddress(){
                 if self.isButtonEnabled {
                     self.showToastAlert(message: "Enter valid email address!")
@@ -154,10 +137,9 @@ class LoginViewController: UIViewController {
                         self.isButtonEnabled = true
                     }
                 }
-                
             }else if !password.validatePassword(){
                 if self.isButtonEnabled {
-//                    self.showToastAlert(message: "Enter valid password!")
+                    //                    self.showToastAlert(message: "Enter valid password!")
                     self.isButtonEnabled = false
                     DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
                         self.isButtonEnabled = true
@@ -165,7 +147,6 @@ class LoginViewController: UIViewController {
                 }
             }
         }
-        
         
         guard let empNumber = txtEmpno.text,
               let email = txtEmail.text,
@@ -188,15 +169,13 @@ class LoginViewController: UIViewController {
         }
     }
     
-    
     func checkEmployeeNumberMatch(user: FirebaseAuth.User, empNumber: String){
         
         UserDefaults.standard.set(user.displayName, forKey: "username")
         UserDefaults.standard.synchronize()
         // Reference to the users node in the Realtime Database
-        if let currentUser = Auth.auth().currentUser {
-            let userID = currentUser.uid
-            let usersRef = Database.database().reference().child("users").child(userID)
+   
+            let usersRef = Database.database().reference().child("users")
             
             // Query to check if the provided credentials exist in the database
             let query = usersRef.queryOrdered(byChild: "empNumber").queryEqual(toValue: empNumber)
@@ -222,22 +201,16 @@ class LoginViewController: UIViewController {
                 self.txtEmail.text = ""
                 self.txtPassword.text = ""
                 
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
+                //            self.navigationController?.pushViewController(mainTabBarController, animated: true)
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
+                
             }
             
             
-            
-            
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
-            //            self.navigationController?.pushViewController(mainTabBarController, animated: true)
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
-            
-            
-            
-        }
+        
     }
-    
     
     @IBAction func buttonSignUpNavigation(_ sender: UIButton) {
         
@@ -294,7 +267,7 @@ extension UITextField {
             button.setImage(UIImage(named: "eye_visible"), for: .normal)
         }
     }
-
+    
     func enablePasswordToggle() {
         let button = UIButton(type: .custom)
         setPasswordToggleImage(button)
@@ -304,7 +277,7 @@ extension UITextField {
         self.rightView = button
         self.rightViewMode = .always
     }
-
+    
     @objc func togglePasswordView(_ sender: Any) {
         if isSecureTextEntry {
             showText()
@@ -313,7 +286,7 @@ extension UITextField {
         }
         setPasswordToggleImage(sender as! UIButton)
     }
-
+    
     private func showText() {
         guard let text = self.text else { return }
         let tempText = self.text
@@ -321,7 +294,7 @@ extension UITextField {
         self.text = ""
         self.text = tempText
     }
-
+    
     private func hideText() {
         guard let text = self.text else { return }
         let tempText = self.text

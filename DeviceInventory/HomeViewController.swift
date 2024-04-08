@@ -6,6 +6,10 @@ import FirebaseDatabase
 
 
 class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, DeviceAvailabilityDelegate{
+    func didTapCheckBox(at indexPath: IndexPath, isChecked: Bool) {
+        
+    }
+    
     
     
     
@@ -88,9 +92,14 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         cell.txtConfiguration.text = "Description :- \(device.configuration)"
         cell.txtVersion.text = "Version :- \(device.version)"
         cell.txtStatus.text = device.isAvailable ? "Available" : "Unavailable"
-        cell.txtStatus.textColor = device.isAvailable ? UIColor.green : UIColor.red
+        cell.txtStatus.textColor = device.isAvailable ? UIColor.systemGreen : UIColor.red
 
+        
 
+    
+        
+
+        
         
         cell.yesCheckBox.setOn(device.isAvailable, animated: false)
 
@@ -100,6 +109,7 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         
         // Set checkbox state based on UserDefaults
         if let isChecked = UserDefaults.standard.value(forKey: "CheckboxState_\(indexPath.row)") as? Bool {
+            
             cell.yesCheckBox.setOn(isChecked, animated: false)
             checkboxStates[indexPath] = isChecked
         } else {
@@ -138,42 +148,58 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
         return cell
     }
     
-    func storeUncheckedDevice(_ device: Devices, userName: String, userEmpNo: String) {
-        let engagedDevicesRef = Database.database().reference().child("engagedDevices")
-        engagedDevicesRef.child(device.id).setValue([
-            "deviceName": device.name,
-            "deviceID": device.id,
-            "empNo": userEmpNo,
-            "userName": userName
-        ])
-    }
+  
 
     func updateAvailability(isAvailable: Bool, forRowAt indexPath: IndexPath) {
         
-
+        
         let device = devices[indexPath.row]
         let deviceId = device.id
         let databaseRef = Database.database().reference().child("device").child(deviceId)
         
         // Update isAvailable in Firebase based on checkbox state
-           databaseRef.updateChildValues(["isAvailable": isAvailable]) { error, _ in
-               if let error = error {
-                   print("Error updating isAvailable in database: \(error.localizedDescription)")
-               } else {
-                   print("isAvailable updated successfully in database")
-               }
-           }
+        databaseRef.updateChildValues(["isAvailable": isAvailable]) { error, _ in
+            if let error = error {
+                print("Error updating isAvailable in database: \(error.localizedDescription)")
+            } else {
+                print("isAvailable updated successfully in database")
+            }
+        }
+        
+        
         
         checkboxStates[indexPath] = isAvailable
+        
+        
+        if !isAvailable {
+            guard let currentUser = Auth.auth().currentUser else {
+                // Handle if user is not logged in
+                return
+            }
+            
+            let userID = currentUser.uid
+            let usersRef = Database.database().reference().child("users").child(userID)
+            usersRef.observeSingleEvent(of: .value) { snapshot, _ in // Added placeholder for the second argument
+                if let userData = snapshot.value as? [String: Any] {
+                    let userName = userData["name"] as? String ?? ""
+                    let userEmpNo = userData["empNumber"] as? String ?? ""
+                    
+                    self.storeUncheckedDevice(device, userName: userName, userEmpNo: userEmpNo, imageURL: device.imageURL ?? "")
+                }
+            }
+        }
 
-
-//           // Update the local data model
-//           devices[indexPath.row].isAvailable = isAvailable
-//
-//           // Update the checkbox state in the table view cell
-//           if let cell = tableView.cellForRow(at: indexPath) as? DevicelistTableViewCell {
-//               cell.yesCheckBox.setOn(isAvailable, animated: true)
-//           }
+    }
+    
+    func storeUncheckedDevice(_ device: Devices, userName: String, userEmpNo: String, imageURL: String) {
+        let engagedDevicesRef = Database.database().reference().child("engagedDevices")
+        engagedDevicesRef.child(device.id).setValue([
+            "deviceName": device.name,
+            "deviceID": device.id,
+            "imageURL": device.imageURL,
+            "empNo": userEmpNo,
+            "empName": userName
+        ])
     }
   
     func updateCheckboxStates() {
@@ -219,31 +245,10 @@ class HomeViewController: UIViewController, UITableViewDataSource, UITableViewDe
             self.tableView.separatorStyle = .singleLine
             
             self.updateCheckboxStates()
-            self.updateTabBarBadge()
         }
     }
     
     
-    func updateTabBarBadge() {
-        // Get the count of devices
-        let deviceCount = devices.count
-        
-        // Update the tab bar item with the device count as the badge value
-        if let tabBarController = self.tabBarController {
-            if deviceCount > 0 {
-                let desiredTabIndex = 0 // Set the index of the tab where you want to display the badge
-                tabBarController.tabBar.items?[desiredTabIndex].badgeValue = "\(deviceCount)"
-                // Customize badge appearance
-                if let tabBarItems = tabBarController.tabBar.items, tabBarItems.count > desiredTabIndex {
-                    tabBarItems[desiredTabIndex].badgeColor = .red
-                    tabBarItems[desiredTabIndex].setBadgeTextAttributes([.foregroundColor: UIColor.white], for: .normal)
-                }
-            } else {
-                let desiredTabIndex = 0 // Set the index of the tab where you want to hide the badge
-                tabBarController.tabBar.items?[desiredTabIndex].badgeValue = nil // Hide badge if count is 0
-            }
-        }
-    }
 
 
 

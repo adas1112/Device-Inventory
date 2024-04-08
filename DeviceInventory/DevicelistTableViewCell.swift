@@ -8,20 +8,24 @@
 import UIKit
 import BEMCheckBox
 
+
 protocol DeviceAvailabilityDelegate: AnyObject {
     func updateAvailability(isAvailable: Bool, forRowAt indexPath: IndexPath)
+    func didTapCheckBox(at indexPath: IndexPath, isChecked: Bool)
 }
 
 class DevicelistTableViewCell: UITableViewCell {
     
+    var checkboxStates: [IndexPath: Bool] = [:]
     @IBOutlet weak var txtDeviceName: UILabel!
     @IBOutlet weak var deviceImage: UIImageView!
     @IBOutlet weak var txtConfiguration: UILabel!
     @IBOutlet weak var txtDescription: UILabel!
     @IBOutlet weak var txtVersion: UILabel!
     @IBOutlet weak var txtAvailable: UILabel!
-    
-    
+
+    var isFirstClick = true // Track the initial click state
+
     @IBOutlet weak var downArrow: UIImageView!
     @IBOutlet weak var submitButton: UIButton!
     
@@ -34,7 +38,7 @@ class DevicelistTableViewCell: UITableViewCell {
     weak var delegate: DeviceAvailabilityDelegate?
     var indexPath: IndexPath?
     var previousState: Bool?
-
+    
     
     override  func awakeFromNib() {
         super.awakeFromNib()
@@ -50,38 +54,53 @@ class DevicelistTableViewCell: UITableViewCell {
         // Set initial state for status label
         txtStatus.isHidden = false // Make txtStatus permanently visible
         
+        
+        // Check and set checkbox state from UserDefaults
+               if let indexPath = indexPath {
+                   if let isChecked = UserDefaults.standard.value(forKey: "CheckboxState_\(indexPath.row)") as? Bool {
+                       yesCheckBox.setOn(isChecked, animated: false)
+                       yesCheckBox.isUserInteractionEnabled = !isChecked // Disable if checked
+                   } else {
+                       yesCheckBox.setOn(false, animated: false)
+                   }
+               }
+        
     }
     
     
     @IBAction func submitClick(_ sender: UIButton) {
         guard let indexPath = indexPath, let previousState = previousState else { return }
-                  
-             // Check if the checkbox state has changed since last tap
-             if previousState == yesCheckBox.on {
-                 delegate?.updateAvailability(isAvailable: yesCheckBox.on, forRowAt: indexPath)
-                 UserDefaults.standard.set(yesCheckBox.on, forKey: "CheckboxState_\(indexPath.row)")
-                 
-                
-             }
+        
+        // Check if the checkbox state has changed since last tap
+        if previousState == yesCheckBox.on {
+            delegate?.updateAvailability(isAvailable: yesCheckBox.on, forRowAt: indexPath)
+            UserDefaults.standard.set(yesCheckBox.on, forKey: "CheckboxState_\(indexPath.row)")
+            
+            yesCheckBox.isUserInteractionEnabled = false
+        }
     }
     
-    
+
+
 }
-    
+
+
+
 
 extension DevicelistTableViewCell: BEMCheckBoxDelegate {
-    func didTap(_ checkBox: BEMCheckBox) {
-        if let indexPath = indexPath {
-                    previousState = checkBox.on // Update previousState when checkbox is tapped
+func didTap(_ checkBox: BEMCheckBox) {
+    if let indexPath = indexPath {
+        previousState = checkBox.on // Update previousState when checkbox is tapped
+        
 
-            txtStatus.text = checkBox.on ? "Available" : "Unavailable"
-                     txtStatus.textColor = checkBox.on ? UIColor.green : UIColor.red
-            
-            
-                 
-                    
-                }
+        // Update checkboxStates dictionary
+        checkboxStates[indexPath] = checkBox.on
+        
+        txtStatus.text = checkBox.on ? "Available" : "Unavailable"
+        txtStatus.textColor = checkBox.on ? UIColor.systemGreen : UIColor.red
+        
+       
+
     }
- 
 }
-
+}

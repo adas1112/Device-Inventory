@@ -167,49 +167,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "09A4B5BA-3345-4296-B5FB-68449328BF1A"
+            uuid = "DC0586EC-445C-40C6-B71E-77BEC45536D6"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "DeviceInventory/DevicelistTableViewCell.swift"
+            filePath = "DeviceInventory/EngageDeviceTableViewCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
-            landmarkName = "submitClick(_:)"
+            startingLineNumber = "39"
+            endingLineNumber = "39"
+            landmarkName = "returnClick(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "1B837EFA-E717-41D3-9A4C-3ECDDD00C68C"
+            uuid = "B70753E5-F0AD-4004-8758-1107CCCCF458"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DeviceInventory/EngageDevViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
-            landmarkName = "fetchUserData()"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "returnButtonTapped(cell:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F907ABF3-B4E3-4D34-BDB7-0B7E76532FA4"
+            uuid = "91F2DD0D-DEED-4CE7-9A6A-E51DAF9C5732"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DeviceInventory/EngageDevViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
-            landmarkName = "tableView(_:cellForRowAt:)"
-            landmarkType = "7">
+            startingLineNumber = "61"
+            endingLineNumber = "61"
+            landmarkName = "EngageDevViewController"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

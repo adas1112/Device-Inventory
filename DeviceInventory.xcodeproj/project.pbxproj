@@ -9,12 +9,9 @@
 /* Begin PBXBuildFile section */
 		47C7587E3BC3FFABFE4BD0C8 /* Pods_DeviceInventory.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F99C456089392AA9BB47EE3 /* Pods_DeviceInventory.framework */; };
 		9C05B88C2BBAA06600F20803 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C05B88B2BBAA06600F20803 /* HomeViewController.swift */; };
+		9C4E16FE2BC526B600BA8B18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CBA521B2B8F57AA00553DFF /* Assets.xcassets */; };
 		9C5B0E372B91A9FE006D3D6B /* ValidationRegex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5B0E362B91A9FE006D3D6B /* ValidationRegex.swift */; };
 		9C5B0E392B91B2E4006D3D6B /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5B0E382B91B2E4006D3D6B /* AlertController.swift */; };
-		9C9B34FB2BBD2A4900B8B804 /* BEMPathManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9B34F72BBD2A4800B8B804 /* BEMPathManager.swift */; };
-		9C9B34FC2BBD2A4900B8B804 /* BEMAnimationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9B34F82BBD2A4800B8B804 /* BEMAnimationManager.swift */; };
-		9C9B34FD2BBD2A4900B8B804 /* BEMCheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9B34F92BBD2A4800B8B804 /* BEMCheckBox.swift */; };
-		9C9B34FE2BBD2A4900B8B804 /* BEMCheckBoxGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C9B34FA2BBD2A4800B8B804 /* BEMCheckBoxGroup.swift */; };
 		9CA38CD72BA05B8400E566E3 /* ForgetPasswordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA38CD62BA05B8400E566E3 /* ForgetPasswordController.swift */; };
 		9CA5F8382BADAC2600B442E3 /* EditProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CA5F8372BADAC2600B442E3 /* EditProfileViewController.swift */; };
 		9CAC7BED2B970772005A202F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9CAC7BEC2B970772005A202F /* GoogleService-Info.plist */; };
@@ -23,7 +20,6 @@
 		9CBA52122B8F57A800553DFF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBA52112B8F57A800553DFF /* SceneDelegate.swift */; };
 		9CBA52172B8F57A800553DFF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CBA52152B8F57A800553DFF /* Main.storyboard */; };
 		9CBA521A2B8F57A800553DFF /* DeviceInventory.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9CBA52182B8F57A800553DFF /* DeviceInventory.xcdatamodeld */; };
-		9CBA521C2B8F57AA00553DFF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9CBA521B2B8F57AA00553DFF /* Assets.xcassets */; };
 		9CBA521F2B8F57AA00553DFF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9CBA521D2B8F57AA00553DFF /* LaunchScreen.storyboard */; };
 		9CBA65FE2B95A3360023F3EE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CBA65FD2B95A3360023F3EE /* LoginViewController.swift */; };
 		9CC84F7D2BBAA1FC00AC729E /* DevicelistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CC84F7C2BBAA1FC00AC729E /* DevicelistTableViewCell.swift */; };
@@ -37,11 +33,6 @@
 		9C05B88B2BBAA06600F20803 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		9C5B0E362B91A9FE006D3D6B /* ValidationRegex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidationRegex.swift; sourceTree = "<group>"; };
 		9C5B0E382B91B2E4006D3D6B /* AlertController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
-		9C9B34F72BBD2A4800B8B804 /* BEMPathManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BEMPathManager.swift; sourceTree = "<group>"; };
-		9C9B34F82BBD2A4800B8B804 /* BEMAnimationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BEMAnimationManager.swift; sourceTree = "<group>"; };
-		9C9B34F92BBD2A4800B8B804 /* BEMCheckBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BEMCheckBox.swift; sourceTree = "<group>"; };
-		9C9B34FA2BBD2A4800B8B804 /* BEMCheckBoxGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BEMCheckBoxGroup.swift; sourceTree = "<group>"; };
-		9C9B34FF2BBD2A8600B8B804 /* CheckBoxHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CheckBoxHeader.h; sourceTree = "<group>"; };
 		9CA38CD62BA05B8400E566E3 /* ForgetPasswordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForgetPasswordController.swift; sourceTree = "<group>"; };
 		9CA5F8372BADAC2600B442E3 /* EditProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileViewController.swift; sourceTree = "<group>"; };
 		9CAC7BEC2B970772005A202F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -84,17 +75,6 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		9C9B34F62BBD2A4800B8B804 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				9C9B34F72BBD2A4800B8B804 /* BEMPathManager.swift */,
-				9C9B34F82BBD2A4800B8B804 /* BEMAnimationManager.swift */,
-				9C9B34F92BBD2A4800B8B804 /* BEMCheckBox.swift */,
-				9C9B34FA2BBD2A4800B8B804 /* BEMCheckBoxGroup.swift */,
-			);
-			path = Classes;
-			sourceTree = "<group>";
-		};
 		9CBA52032B8F57A800553DFF = {
 			isa = PBXGroup;
 			children = (
@@ -116,10 +96,8 @@
 		9CBA520E2B8F57A800553DFF /* DeviceInventory */ = {
 			isa = PBXGroup;
 			children = (
-				9C9B34F62BBD2A4800B8B804 /* Classes */,
 				9CD711B62B9837A5000DBFFA /* Extensions */,
 				9CAC7BEC2B970772005A202F /* GoogleService-Info.plist */,
-				9C9B34FF2BBD2A8600B8B804 /* CheckBoxHeader.h */,
 				9CBA520F2B8F57A800553DFF /* AppDelegate.swift */,
 				9CBA52112B8F57A800553DFF /* SceneDelegate.swift */,
 				9CBA65FD2B95A3360023F3EE /* LoginViewController.swift */,
@@ -219,7 +197,7 @@
 			files = (
 				9CBA521F2B8F57AA00553DFF /* LaunchScreen.storyboard in Resources */,
 				9CAC7BED2B970772005A202F /* GoogleService-Info.plist in Resources */,
-				9CBA521C2B8F57AA00553DFF /* Assets.xcassets in Resources */,
+				9C4E16FE2BC526B600BA8B18 /* Assets.xcassets in Resources */,
 				9CBA52172B8F57A800553DFF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,18 +257,14 @@
 				9CBA52102B8F57A800553DFF /* AppDelegate.swift in Sources */,
 				9CBA521A2B8F57A800553DFF /* DeviceInventory.xcdatamodeld in Sources */,
 				9CC84F7D2BBAA1FC00AC729E /* DevicelistTableViewCell.swift in Sources */,
-				9C9B34FD2BBD2A4900B8B804 /* BEMCheckBox.swift in Sources */,
 				9CA38CD72BA05B8400E566E3 /* ForgetPasswordController.swift in Sources */,
 				9CDD24432BAC0D6A000D60B3 /* ProfileViewController.swift in Sources */,
 				9CBA65FE2B95A3360023F3EE /* LoginViewController.swift in Sources */,
-				9C9B34FB2BBD2A4900B8B804 /* BEMPathManager.swift in Sources */,
-				9C9B34FE2BBD2A4900B8B804 /* BEMCheckBoxGroup.swift in Sources */,
 				9CA5F8382BADAC2600B442E3 /* EditProfileViewController.swift in Sources */,
 				9C05B88C2BBAA06600F20803 /* HomeViewController.swift in Sources */,
 				9C5B0E392B91B2E4006D3D6B /* AlertController.swift in Sources */,
 				9CB8C8332B95DE0100DA8BF9 /* SignUpViewController.swift in Sources */,
 				9CBA52122B8F57A800553DFF /* SceneDelegate.swift in Sources */,
-				9C9B34FC2BBD2A4900B8B804 /* BEMAnimationManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -459,7 +433,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = DeviceInventory/CheckBoxHeader.h;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -492,7 +466,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = DeviceInventory/CheckBoxHeader.h;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

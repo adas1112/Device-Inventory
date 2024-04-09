@@ -6,12 +6,15 @@
 //
 
 import UIKit
-
+protocol EngageDeviceCellDelegate: AnyObject {
+    func returnButtonTapped(cell: EngageDeviceTableViewCell)
+}
 class EngageDeviceTableViewCell: UITableViewCell {
     
     
     @IBOutlet weak var txtDeviceName: UILabel!
-    
+    weak var delegate: EngageDeviceCellDelegate?
+
     @IBOutlet weak var cellView: UIView!
     @IBOutlet weak var txtDeviceId: UILabel!
     @IBOutlet weak var txtEmpNo: UILabel!
@@ -35,7 +38,9 @@ class EngageDeviceTableViewCell: UITableViewCell {
     
     @IBAction func returnClick(_ sender: UIButton) {
         
-        
+        delegate?.returnButtonTapped(cell: self)
+
+
     }
     
 

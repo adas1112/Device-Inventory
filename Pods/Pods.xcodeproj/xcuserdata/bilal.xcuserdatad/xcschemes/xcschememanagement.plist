@@ -6,8 +6,6 @@
 	<dict>
 		<key>BEMCheckBox.xcscheme</key>
 		<dict>
-			<key>isShown</key>
-			<false/>
 			<key>orderHint</key>
 			<integer>32</integer>
 		</dict>

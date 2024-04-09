@@ -9,7 +9,7 @@ import UIKit
 import FirebaseDatabase
 import Firebase
 
-class EngageDevViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class EngageDevViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, EngageDeviceCellDelegate {
     
     var devices: [EngageDevice] = []
     var activityIndicator: UIActivityIndicatorView!
@@ -59,6 +59,52 @@ class EngageDevViewController: UIViewController, UITableViewDataSource, UITableV
         fetchUserData()
     }
     
+    func returnButtonTapped(cell: EngageDeviceTableViewCell) {
+        guard let indexPath = self.tableView.indexPath(for: cell) else {
+            return
+        }
+        
+        // Check if the index is within the bounds of the devices array
+        guard indexPath.row < devices.count else {
+            print("Index out of range")
+            return
+        }
+        
+        let device = devices[indexPath.row]
+        
+        // Create an alert controller
+        let alertController = UIAlertController(title: "Return Device", message: "Are you sure you want to return this device?", preferredStyle: .alert)
+        
+        // Add return action
+        let returnAction = UIAlertAction(title: "Return", style: .default) { _ in
+            // Perform database operation to remove the device
+            let devicesRef = Database.database().reference().child("engagedDevices").child(device.deviceID)
+            devicesRef.removeValue { error, _ in
+                // Update isAvailable in 'device' node to true after returning
+                Database.database().reference().child("device").child(device.deviceID).child("isAvailable").setValue(true)
+                
+                if let error = error {
+                    print("Error removing device data: \(error.localizedDescription)")
+                } else {
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }
+            }
+        }
+        
+        // Add cancel action
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        // Add actions to the alert controller
+        alertController.addAction(returnAction)
+        alertController.addAction(cancelAction)
+        
+        // Present the alert controller
+        present(alertController, animated: true)
+    }
+
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if selectedIndex == indexPath.row && isCallpase == true {
@@ -70,26 +116,33 @@ class EngageDevViewController: UIViewController, UITableViewDataSource, UITableV
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! EngageDeviceTableViewCell
+        
+        // Check if indexPath.row is within the bounds of devices array
+        guard indexPath.row < devices.count else {
+            return cell // Return an empty cell if the index is out of range
+        }
+        
         cell.indexPath = indexPath
+        cell.delegate = self
         let device = devices[indexPath.row]
-        cell.txtDeviceName.text = device.deviceName
-        cell.txtDeviceId.text = "Device ID : \(device.deviceID)"
-        cell.txtEmpNo.text = "Employee Number : \(device.empNo)"
-        cell.txtEmpName.text = "Employee Name : \(device.empName)"
-       
+        cell.txtDeviceName?.text = device.deviceName
+        cell.txtDeviceId?.text = "Device ID : \(device.deviceID)"
+        cell.txtEmpNo?.text = "Employee Number : \(device.empNo)"
+        cell.txtEmpName?.text = "Employee Name : \(device.empName)"
+        
         cell.cellView.layer.cornerRadius =  30
-        cell.selectionStyle = .none;
+        cell.selectionStyle = .none
         tableView.separatorStyle = .none
         
         activityIndicator.startAnimating()
         loadingLabel.isHidden = false
-        
         
         if indexPath.row == selectedIndex {
             cell.downArrow.image = isCallpase ? UIImage(named: "up") : UIImage(named: "down")
         } else {
             cell.downArrow.image = UIImage(named: "down") // Default arrow icon
         }
+        
         // Check if imageURL is available
         if let imageURLString = device.imageURL, let imageURL = URL(string: imageURLString) {
             if let cachedImage = imageCache.object(forKey: imageURLString as NSString) {
@@ -112,7 +165,9 @@ class EngageDevViewController: UIViewController, UITableViewDataSource, UITableV
         }
         return cell
     }
-
+    
+    
+    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return devices.count
@@ -120,57 +175,38 @@ class EngageDevViewController: UIViewController, UITableViewDataSource, UITableV
     
     
     
-       func fetchUserData() {
-               let devicesRef = Database.database().reference().child("engagedDevices")
-               
-               activityIndicator.startAnimating()
-               loadingLabel.isHidden = false
-               tableView.separatorStyle = .none
-               
-               
-               devicesRef.observe(.value) { snapshot in
-                   self.devices.removeAll() // Clear previous data
-                   
-                   for case let childSnapshot as DataSnapshot in snapshot.children {
-                       if let deviceDict = childSnapshot.value as? [String: Any] {
-                           let id = childSnapshot.key
-                                             let deviceName = deviceDict["deviceName"] as? String ?? ""
-                                             let empName = deviceDict["empName"] as? String ?? ""
-                                             let empNo = deviceDict["empNo"] as? String ?? ""
-                                             let imageURL = deviceDict["imageURL"] as? String
-                                             
-                                             let device = EngageDevice(deviceID: id, deviceName: deviceName, empName: empName, empNo: empNo, imageURL: imageURL)
-                                             self.devices.append(device)
-                         
-                       }
-                   }
-                   self.tableView.reloadData() // Reload table view to display fetched data
-                   self.activityIndicator.stopAnimating()
-                   self.loadingLabel.isHidden = true
-                   self.tableView.separatorStyle = .singleLine
-                   
-                   self.updateTabBarBadge()
-               }
-           }
-       
-    
-    func updateTabBarBadge() {
-        // Get the count of devices
-        let deviceCount = devices.count
+    func fetchUserData() {
+        let devicesRef = Database.database().reference().child("engagedDevices")
         
-        // Update the tab bar item with the device count as the badge value
-        if let tabBarController = self.tabBarController {
-            if deviceCount > 0 {
-                let desiredTabIndex = 0 // Set the index of the tab where you want to display the badge
-                tabBarController.tabBar.items?[desiredTabIndex].badgeValue = "\(deviceCount)"
-                // Customize badge appearance
-                if let tabBarItems = tabBarController.tabBar.items, tabBarItems.count > desiredTabIndex {
-                    tabBarItems[desiredTabIndex].badgeColor = .red
-                    tabBarItems[desiredTabIndex].setBadgeTextAttributes([.foregroundColor: UIColor.white], for: .normal)
+        activityIndicator.startAnimating()
+        loadingLabel.isHidden = false
+        tableView.separatorStyle = .none
+        
+        
+        devicesRef.observe(.value) { snapshot in
+            self.devices.removeAll() // Clear previous data
+            
+            for case let childSnapshot as DataSnapshot in snapshot.children {
+                if let deviceDict = childSnapshot.value as? [String: Any] {
+                    let id = childSnapshot.key
+                    let deviceName = deviceDict["deviceName"] as? String ?? ""
+                    let empName = deviceDict["empName"] as? String ?? ""
+                    let empNo = deviceDict["empNo"] as? String ?? ""
+                    let imageURL = deviceDict["imageURL"] as? String
+                    let isAvailable = deviceDict["isAvailable"] as? Bool ?? true
+                    
+                    let device = EngageDevice(deviceID: id, deviceName: deviceName, empName: empName, empNo: empNo, imageURL: imageURL, isAvailable: isAvailable)
+                    self.devices.append(device)
+                    
                 }
-            } else {
-                let desiredTabIndex = 0 // Set the index of the tab where you want to hide the badge
-                tabBarController.tabBar.items?[desiredTabIndex].badgeValue = nil // Hide badge if count is 0
+            }
+            
+            DispatchQueue.main.async {
+                self.devices = self.devices // Assign new data to devices array
+                self.tableView.reloadData() // Reload table view on the main thread
+                self.activityIndicator.stopAnimating()
+                self.loadingLabel.isHidden = true
+                self.tableView.separatorStyle = .singleLine
             }
         }
     }
@@ -178,12 +214,11 @@ class EngageDevViewController: UIViewController, UITableViewDataSource, UITableV
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.beginUpdates()
         if selectedIndex == indexPath.row {
-            if self.isCallpase == true {
+            if isCallpase {
                 isCallpase = false
-                tableView.reloadRows(at: [indexPath], with: .automatic)
+                selectedIndex = -1
             } else {
                 isCallpase = true
-                tableView.reloadRows(at: [indexPath], with: .automatic)
             }
         } else {
             // Collapse the previously expanded cell if any
@@ -196,11 +231,11 @@ class EngageDevViewController: UIViewController, UITableViewDataSource, UITableV
             // Expand the selected cell
             isCallpase = true
             selectedIndex = indexPath.row
-            tableView.reloadRows(at: [indexPath], with: .automatic)
         }
+        tableView.reloadRows(at: [indexPath], with: .automatic)
         tableView.endUpdates()
     }
-   
+    
 }
 
 //create model struct
@@ -210,4 +245,5 @@ struct EngageDevice {
     var empName : String
     var empNo : String
     var imageURL : String?
+    var isAvailable: Bool
 }

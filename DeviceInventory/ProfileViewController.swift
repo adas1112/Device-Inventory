@@ -205,39 +205,39 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
 
 extension ProfileViewController: UINavigationBarDelegate, UIImagePickerControllerDelegate{
     func openCamera() {
-         let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
-         switch cameraAuthorizationStatus {
-         case .authorized:
-             showImagePicker()
-         case .notDetermined:
-             // Request camera access
-             AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
-                 if granted {
-                     DispatchQueue.main.async {
-                         self?.showImagePicker()
-                     }
-                 } else {
-                     DispatchQueue.main.async {
-                         self?.showPermissionPrompt()
-                     }
-                 }
-             }
-         case .denied, .restricted:
-             showPermissionPrompt()
-         @unknown default:
-             showPermissionPrompt()
-         }
-     }
-
-     func showPermissionPrompt() {
-         let alert = UIAlertController(title: "Camera Access Denied", message: "To enable camera access, please go to Settings > Privacy > Camera and enable access for this app.", preferredStyle: .alert)
-         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-         alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
-             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-         }))
-         present(alert, animated: true, completion: nil)
-     }
-
+        let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
+        switch cameraAuthorizationStatus {
+        case .authorized:
+            showImagePicker()
+        case .notDetermined:
+            // Request camera access
+            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+                if granted {
+                    DispatchQueue.main.async {
+                        self?.showImagePicker()
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self?.showPermissionPrompt()
+                    }
+                }
+            }
+        case .denied, .restricted:
+            showPermissionPrompt()
+        @unknown default:
+            showPermissionPrompt()
+        }
+    }
+    
+    func showPermissionPrompt() {
+        let alert = UIAlertController(title: "Camera Access Denied", message: "To enable camera access, please go to Settings > Privacy > Camera and enable access for this app.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Settings", style: .default, handler: { _ in
+            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+        }))
+        present(alert, animated: true, completion: nil)
+    }
+    
     func showImagePicker() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             let imagePicker = UIImagePickerController()
@@ -249,7 +249,7 @@ extension ProfileViewController: UINavigationBarDelegate, UIImagePickerControlle
             showToastAlert(message: "Camera is not available")
         }
     }
-
+    
     
     func openGallery(){
         if  UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){

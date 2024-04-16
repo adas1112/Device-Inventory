@@ -174,41 +174,41 @@ class LoginViewController: UIViewController {
         UserDefaults.standard.set(user.displayName, forKey: "username")
         UserDefaults.standard.synchronize()
         // Reference to the users node in the Realtime Database
-   
-            let usersRef = Database.database().reference().child("users")
-            
-            // Query to check if the provided credentials exist in the database
-            let query = usersRef.queryOrdered(byChild: "empNumber").queryEqual(toValue: empNumber)
-            
-            query.observeSingleEvent(of: .value) { snapshot in
-                guard let userSnapshot = snapshot.children.allObjects.first as? DataSnapshot,
-                      let user = userSnapshot.value as? [String: Any],
-                      let storedEmail = user["email"] as? String
-                else {
-                    // User not found or unable to retrieve user data
-                    if self.isButtonEnabled {
-                        self.showToastAlert(message: "Employee number not exists!")
-                        self.isButtonEnabled = false
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
-                            self.isButtonEnabled = true
-                        }
+        
+        let usersRef = Database.database().reference().child("users")
+        
+        // Query to check if the provided credentials exist in the database
+        let query = usersRef.queryOrdered(byChild: "empNumber").queryEqual(toValue: empNumber)
+        
+        query.observeSingleEvent(of: .value) { snapshot in
+            guard let userSnapshot = snapshot.children.allObjects.first as? DataSnapshot,
+                  let user = userSnapshot.value as? [String: Any],
+                  let storedEmail = user["email"] as? String
+            else {
+                // User not found or unable to retrieve user data
+                if self.isButtonEnabled {
+                    self.showToastAlert(message: "Employee number not exists!")
+                    self.isButtonEnabled = false
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                        self.isButtonEnabled = true
                     }
-                    //
-                    return
                 }
-                
-                self.txtEmpno.text = ""
-                self.txtEmail.text = ""
-                self.txtPassword.text = ""
-                
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
-                //            self.navigationController?.pushViewController(mainTabBarController, animated: true)
-                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
-                
+                //
+                return
             }
             
+            self.txtEmpno.text = ""
+            self.txtEmail.text = ""
+            self.txtPassword.text = ""
             
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            let mainTabBarController = storyboard.instantiateViewController(identifier: "MainTabBarController")
+            //            self.navigationController?.pushViewController(mainTabBarController, animated: true)
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(mainTabBarController)
+            
+        }
+        
+        
         
     }
     

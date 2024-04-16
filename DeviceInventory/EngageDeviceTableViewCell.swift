@@ -14,7 +14,7 @@ class EngageDeviceTableViewCell: UITableViewCell {
     
     @IBOutlet weak var txtDeviceName: UILabel!
     weak var delegate: EngageDeviceCellDelegate?
-
+    
     @IBOutlet weak var cellView: UIView!
     @IBOutlet weak var txtDeviceId: UILabel!
     @IBOutlet weak var txtEmpNo: UILabel!
@@ -32,17 +32,17 @@ class EngageDeviceTableViewCell: UITableViewCell {
         returmButton.layer.cornerRadius = 20 // Adjust the corner radius as needed
         returmButton.clipsToBounds = true
         
-
+        
     }
     
     
     @IBAction func returnClick(_ sender: UIButton) {
         
         delegate?.returnButtonTapped(cell: self)
-
-
+        
+        
     }
     
-
-
+    
+    
 }

@@ -317,5 +317,7 @@ class SignUpViewController: UIViewController {
     }
     
     @IBAction func buttonLoginNavigation(_ sender: UIButton) {
+        
+        self.navigationController?.popViewController(animated: true)
     }
 }

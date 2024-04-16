@@ -103,7 +103,7 @@ class EngageDevViewController: UIViewController, UITableViewDataSource, UITableV
         // Present the alert controller
         present(alertController, animated: true)
     }
-
+    
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
@@ -170,8 +170,24 @@ class EngageDevViewController: UIViewController, UITableViewDataSource, UITableV
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return devices.count
-    }
+        if devices.isEmpty {
+            // Show "No device found" message
+            let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
+            messageLabel.text = "No device found"
+            messageLabel.textColor = .black
+            messageLabel.textAlignment = .center
+            messageLabel.numberOfLines = 0
+            messageLabel.sizeToFit()
+            
+            tableView.backgroundView = messageLabel
+            tableView.separatorStyle = .none
+        } else {
+            // Remove the message label and show the devices
+            tableView.backgroundView = nil
+            tableView.separatorStyle = .singleLine
+        }
+        
+        return devices.count    }
     
     
     

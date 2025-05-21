@@ -1,3 +1,7 @@
+# Project Screen Video
+
+https://github.com/user-attachments/assets/b73444a8-033a-4376-ba00-a26750f78afd
+
 # 📱 Device Inventory
 
 A Swift-based iOS application designed to manage and track device inventories efficiently.

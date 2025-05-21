@@ -6,41 +6,33 @@
 //
 
 import UIKit
-
-
-protocol DeviceAvailabilityDelegate: AnyObject {
-    func updateAvailability(isAvailable: Bool, forRowAt indexPath: IndexPath)
-    func didTapCheckBox(at indexPath: IndexPath, isChecked: Bool)
-}
-
+    
 class DevicelistTableViewCell: UITableViewCell {
     
-    var checkboxStates: [IndexPath: Bool] = [:]
+    //MARK: - Outlets
+
     @IBOutlet weak var txtDeviceName: UILabel!
     @IBOutlet weak var deviceImage: UIImageView!
     @IBOutlet weak var txtConfiguration: UILabel!
     @IBOutlet weak var txtDescription: UILabel!
     @IBOutlet weak var txtVersion: UILabel!
     @IBOutlet weak var txtAvailable: UILabel!
-    var flag = false
-    var previousState: Bool?
-    
     @IBOutlet weak var checkImage: UIImageView!
-    var isFirstClick = true // Track the initial click state
-    
     @IBOutlet weak var downArrow: UIImageView!
     @IBOutlet weak var submitButton: UIButton!
-    
-    
     @IBOutlet weak var checkBox: UIButton!
-    
     @IBOutlet weak var txtStatus: UILabel!
     @IBOutlet weak var cellView: UIView!
     
+    //MARK: - Variabels
+
     weak var delegate: DeviceAvailabilityDelegate?
     var indexPath: IndexPath?
-    
-    
+    var flag = false
+    var previousState: Bool?
+    var isFirstClick = true // Track the initial click state
+    var checkboxStates: [IndexPath: Bool] = [:]
+
     override  func awakeFromNib() {
         super.awakeFromNib()
         
@@ -48,28 +40,22 @@ class DevicelistTableViewCell: UITableViewCell {
         txtDescription.lineBreakMode = .byWordWrapping
         checkBox.isEnabled = previousState ?? true
         
-        
         submitButton.layer.cornerRadius = 20 // Adjust the corner radius as needed
         submitButton.clipsToBounds = true
         
         // Set initial state for status label
         txtStatus.isHidden = false // Make txtStatus permanently visible
-        
-        
     }
     
+    //MARK: - Button ACtions
+    
     @IBAction func checkBoxClick(_ sender: UIButton) {
-        
-        
         flag = !flag // Toggle the flag variable instead of using toggle()
         if flag {
-            checkImage.image = UIImage(named: "select")
-            
-        } else {
             checkImage.image = UIImage(named: "unselect")
-            
+        } else {
+            checkImage.image = UIImage(named: "select")
         }
-        
         UserDefaults.standard.set(flag, forKey: "CheckboxState_\(indexPath?.row ?? 0)")
     }
     
@@ -88,10 +74,7 @@ class DevicelistTableViewCell: UITableViewCell {
         // Update the previous checkbox state
         previousState = flag
         UserDefaults.standard.set(flag, forKey: "CheckboxState_\(indexPath!.row)")
-        
-        
     }
-    
 }
 
 

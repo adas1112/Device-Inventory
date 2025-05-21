@@ -26,6 +26,11 @@
 		9CD623342BBE64CC00FA543D /* EngageDeviceTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD623332BBE64CC00FA543D /* EngageDeviceTableViewCell.swift */; };
 		9CD623362BBE672A00FA543D /* EngageDevViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CD623352BBE672A00FA543D /* EngageDevViewController.swift */; };
 		9CDD24432BAC0D6A000D60B3 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CDD24422BAC0D6A000D60B3 /* ProfileViewController.swift */; };
+		9CE3DA752DDCAF8200C96741 /* UITextFieldExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE3DA742DDCAF8200C96741 /* UITextFieldExtension.swift */; };
+		9CE3DA772DDCAFFE00C96741 /* UIViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE3DA762DDCAFFE00C96741 /* UIViewControllerExtension.swift */; };
+		9CE3DA7B2DDCB0AA00C96741 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE3DA7A2DDCB0AA00C96741 /* Protocols.swift */; };
+		9CE3DA7E2DDCB74B00C96741 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE3DA7D2DDCB74B00C96741 /* DeviceModel.swift */; };
+		9CE3DA802DDCBA0A00C96741 /* EngageDeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CE3DA7F2DDCBA0A00C96741 /* EngageDeviceModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,6 +55,11 @@
 		9CD623332BBE64CC00FA543D /* EngageDeviceTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngageDeviceTableViewCell.swift; sourceTree = "<group>"; };
 		9CD623352BBE672A00FA543D /* EngageDevViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngageDevViewController.swift; sourceTree = "<group>"; };
 		9CDD24422BAC0D6A000D60B3 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		9CE3DA742DDCAF8200C96741 /* UITextFieldExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextFieldExtension.swift; sourceTree = "<group>"; };
+		9CE3DA762DDCAFFE00C96741 /* UIViewControllerExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtension.swift; sourceTree = "<group>"; };
+		9CE3DA7A2DDCB0AA00C96741 /* Protocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
+		9CE3DA7D2DDCB74B00C96741 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceModel.swift; sourceTree = "<group>"; };
+		9CE3DA7F2DDCBA0A00C96741 /* EngageDeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EngageDeviceModel.swift; sourceTree = "<group>"; };
 		D74B8CFB832B45B290580A37 /* Pods-DeviceInventory.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeviceInventory.debug.xcconfig"; path = "Target Support Files/Pods-DeviceInventory/Pods-DeviceInventory.debug.xcconfig"; sourceTree = "<group>"; };
 		F4D36149B226DEC97F2D207B /* Pods-DeviceInventory.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DeviceInventory.release.xcconfig"; path = "Target Support Files/Pods-DeviceInventory/Pods-DeviceInventory.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -96,35 +106,64 @@
 		9CBA520E2B8F57A800553DFF /* DeviceInventory */ = {
 			isa = PBXGroup;
 			children = (
-				9CD711B62B9837A5000DBFFA /* Extensions */,
-				9CAC7BEC2B970772005A202F /* GoogleService-Info.plist */,
 				9CBA520F2B8F57A800553DFF /* AppDelegate.swift */,
 				9CBA52112B8F57A800553DFF /* SceneDelegate.swift */,
+				9CE3DA7C2DDCB73900C96741 /* Model */,
+				9CD711B62B9837A5000DBFFA /* Extensions & Protocols */,
+				9CAC7BEC2B970772005A202F /* GoogleService-Info.plist */,
 				9CBA65FD2B95A3360023F3EE /* LoginViewController.swift */,
 				9CB8C8322B95DE0100DA8BF9 /* SignUpViewController.swift */,
 				9CA38CD62BA05B8400E566E3 /* ForgetPasswordController.swift */,
 				9C05B88B2BBAA06600F20803 /* HomeViewController.swift */,
-				9CBA52152B8F57A800553DFF /* Main.storyboard */,
+				9CC84F7C2BBAA1FC00AC729E /* DevicelistTableViewCell.swift */,
 				9CD623352BBE672A00FA543D /* EngageDevViewController.swift */,
 				9CD623332BBE64CC00FA543D /* EngageDeviceTableViewCell.swift */,
-				9CC84F7C2BBAA1FC00AC729E /* DevicelistTableViewCell.swift */,
-				9CA5F8372BADAC2600B442E3 /* EditProfileViewController.swift */,
 				9CDD24422BAC0D6A000D60B3 /* ProfileViewController.swift */,
-				9CBA521B2B8F57AA00553DFF /* Assets.xcassets */,
+				9CA5F8372BADAC2600B442E3 /* EditProfileViewController.swift */,
+				9CBA52152B8F57A800553DFF /* Main.storyboard */,
 				9CBA521D2B8F57AA00553DFF /* LaunchScreen.storyboard */,
 				9CBA52202B8F57AA00553DFF /* Info.plist */,
+				9CBA521B2B8F57AA00553DFF /* Assets.xcassets */,
 				9CBA52182B8F57A800553DFF /* DeviceInventory.xcdatamodeld */,
 			);
 			path = DeviceInventory;
 			sourceTree = "<group>";
 		};
-		9CD711B62B9837A5000DBFFA /* Extensions */ = {
+		9CD711B62B9837A5000DBFFA /* Extensions & Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				9CE3DA792DDCB09600C96741 /* Protocols */,
+				9CE3DA782DDCB08300C96741 /* Extensions */,
+			);
+			path = "Extensions & Protocols";
+			sourceTree = "<group>";
+		};
+		9CE3DA782DDCB08300C96741 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				9C5B0E362B91A9FE006D3D6B /* ValidationRegex.swift */,
 				9C5B0E382B91B2E4006D3D6B /* AlertController.swift */,
+				9CE3DA742DDCAF8200C96741 /* UITextFieldExtension.swift */,
+				9CE3DA762DDCAFFE00C96741 /* UIViewControllerExtension.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		9CE3DA792DDCB09600C96741 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				9CE3DA7A2DDCB0AA00C96741 /* Protocols.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		9CE3DA7C2DDCB73900C96741 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9CE3DA7D2DDCB74B00C96741 /* DeviceModel.swift */,
+				9CE3DA7F2DDCBA0A00C96741 /* EngageDeviceModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		A83257288D47F7B842C188F9 /* Frameworks */ = {
@@ -255,15 +294,20 @@
 				9CD623362BBE672A00FA543D /* EngageDevViewController.swift in Sources */,
 				9CD623342BBE64CC00FA543D /* EngageDeviceTableViewCell.swift in Sources */,
 				9CBA52102B8F57A800553DFF /* AppDelegate.swift in Sources */,
+				9CE3DA772DDCAFFE00C96741 /* UIViewControllerExtension.swift in Sources */,
+				9CE3DA7E2DDCB74B00C96741 /* DeviceModel.swift in Sources */,
+				9CE3DA802DDCBA0A00C96741 /* EngageDeviceModel.swift in Sources */,
 				9CBA521A2B8F57A800553DFF /* DeviceInventory.xcdatamodeld in Sources */,
 				9CC84F7D2BBAA1FC00AC729E /* DevicelistTableViewCell.swift in Sources */,
 				9CA38CD72BA05B8400E566E3 /* ForgetPasswordController.swift in Sources */,
 				9CDD24432BAC0D6A000D60B3 /* ProfileViewController.swift in Sources */,
 				9CBA65FE2B95A3360023F3EE /* LoginViewController.swift in Sources */,
 				9CA5F8382BADAC2600B442E3 /* EditProfileViewController.swift in Sources */,
+				9CE3DA752DDCAF8200C96741 /* UITextFieldExtension.swift in Sources */,
 				9C05B88C2BBAA06600F20803 /* HomeViewController.swift in Sources */,
 				9C5B0E392B91B2E4006D3D6B /* AlertController.swift in Sources */,
 				9CB8C8332B95DE0100DA8BF9 /* SignUpViewController.swift in Sources */,
+				9CE3DA7B2DDCB0AA00C96741 /* Protocols.swift in Sources */,
 				9CBA52122B8F57A800553DFF /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

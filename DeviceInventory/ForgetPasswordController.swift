@@ -10,25 +10,26 @@ import Firebase
 
 class ForgetPasswordController: UIViewController {
     
-    var isButtonEnabled = true
+    //MARK: - Outlets
+
     @IBOutlet weak var backTapped: UIImageView!
     @IBOutlet weak var curveView: UIView!
-    
-    @IBOutlet weak var txtEmail: UITextField!
-    {
-        didSet {
-            txtEmail.tintColor = UIColor.gray
-            txtEmail.setIcon(UIImage(imageLiteralResourceName: "email1"))
-        }
+    @IBOutlet weak var txtEmail: UITextField!{
+    didSet {
+        txtEmail.tintColor = UIColor.gray
+        txtEmail.setIcon(UIImage(imageLiteralResourceName: "email1"))
     }
-    
-    @IBOutlet weak var txtEmpNo: UITextField!
-    {
+}
+    @IBOutlet weak var txtEmpNo: UITextField!{
         didSet {
             txtEmpNo.tintColor = UIColor.gray
             txtEmpNo.setIcon(UIImage(imageLiteralResourceName: "employee1"))
         }
     }
+    
+    //MARK: - Variabels
+
+    var isButtonEnabled = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +37,12 @@ class ForgetPasswordController: UIViewController {
         txtEmail.delegate = self
         txtEmpNo.delegate = self
         
-        // Apply rounded corners to the left and right corners
+        setupUI()
+    }
+    
+    //MARK: - UI Setup
+    
+    func setupUI(){
         let cornerRadius: CGFloat = 60
         let maskPath = UIBezierPath(
             roundedRect: curveView.bounds,
@@ -47,21 +53,17 @@ class ForgetPasswordController: UIViewController {
         maskLayer.path = maskPath.cgPath
         curveView.layer.mask = maskLayer
         
-        hideKeyboard()
-        
-        //Back Icon Navigation Using Tap Gestures
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
         backTapped.isUserInteractionEnabled = true
         backTapped.addGestureRecognizer(tapGesture)
         
+        hideKeyboard()
     }
-    
+
+    //MARK: - Button and Image Tapped Actions
+
     @objc func imageViewTapped() {
         navigationController?.popViewController(animated: true)
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        return self.textFieldReturn(textField)
     }
     
     @IBAction func doneClick(_ sender: Any) {
@@ -97,16 +99,22 @@ class ForgetPasswordController: UIViewController {
         // Check if employee number matches in the database
         checkEmployeeNumberMatch(email: email, employeeNumber: employeeNumber)
     }
+
+    //MARK: - Textfield Method
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return self.textFieldReturn(textField)
+    }
     
+    //MARK: - Firebase Methods For Forgetting Password
+
     func checkEmployeeNumberMatch(email: String, employeeNumber: String) {
-        // Assuming your Firebase Realtime Database structure has a 'users' node with employee numbers stored as a child node
         let usersRef = Database.database().reference().child("users")
         usersRef.queryOrdered(byChild: "email").queryEqual(toValue: email).observeSingleEvent(of: .value, with: { snapshot in
             if let userSnapshot = snapshot.children.allObjects.first as? DataSnapshot,
                let userData = userSnapshot.value as? [String: Any],
                let storedEmployeeNumber = userData["empNumber"] as? String,
                storedEmployeeNumber == employeeNumber {
-                // Employee number matches, send password reset email
                 Auth.auth().sendPasswordReset(withEmail: email) { error in
                     if let error = error {
                         self.showToastAlert(message: "Error resetting password: \(error.localizedDescription)")

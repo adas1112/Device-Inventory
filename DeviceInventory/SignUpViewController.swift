@@ -3,10 +3,7 @@ import FirebaseAuth
 import Firebase
 class SignUpViewController: UIViewController {
     
-    // Firebase reference
-    var databaseRef: DatabaseReference!
-    var isButtonEnabled = true
-    var imageURL = ""
+    //MARK: - Outlets
     
     @IBOutlet weak var backTapped: UIImageView!
     @IBOutlet weak var scrollView: UIScrollView!
@@ -16,57 +13,47 @@ class SignUpViewController: UIViewController {
             txtName.setIcon(UIImage(imageLiteralResourceName: "name1"))
         }
     }
-    
     @IBOutlet weak var txtEmail: UITextField!{
         didSet{
             txtEmail.tintColor = UIColor(red: 40/255.0, green: 67/255.0, blue: 135/255.0, alpha: 1.0)
             txtEmail.setIcon(UIImage(imageLiteralResourceName: "email1"))
         }
     }
-    
     @IBOutlet weak var txtEmpno: UITextField!{
         didSet{
             txtEmpno.tintColor = UIColor(red: 40/255.0, green: 67/255.0, blue: 135/255.0, alpha: 1.0)
             txtEmpno.setIcon(UIImage(imageLiteralResourceName: "employee1"))
         }
     }
-    
     @IBOutlet weak var txtDepartment: UITextField!{
         didSet{
             txtDepartment.tintColor = UIColor(red: 40/255.0, green: 67/255.0, blue: 135/255.0, alpha: 1.0)
             txtDepartment.setIcon(UIImage(imageLiteralResourceName: "department1"))
         }
     }
-    
     @IBOutlet weak var txtPassword: UITextField!{
         didSet{
             txtPassword.tintColor = UIColor(red: 40/255.0, green: 67/255.0, blue: 135/255.0, alpha: 1.0)
             txtPassword.setIcon(UIImage(imageLiteralResourceName: "password1"))
         }
     }
-    
     @IBOutlet weak var txtConPass: UITextField!{
         didSet{
             txtConPass.tintColor = UIColor(red: 40/255.0, green: 67/255.0, blue: 135/255.0, alpha: 1.0)
             txtConPass.setIcon(UIImage(imageLiteralResourceName: "password1"))
         }
     }
-    
-    
     @IBOutlet weak var curveView: UIView!
+    
+    //MARK: - Varibels
+    
+    // Firebase reference
+    var databaseRef: DatabaseReference!
+    var isButtonEnabled = true
+    var imageURL = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        textFieldBoreder()
-        hideKeyboard()
-        
-        txtPassword.enablePasswordToggle()
-        txtConPass.enablePasswordToggle()
-        
-        // Add observers for keyboard events
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         txtName.delegate = self
         txtEmail.delegate = self
@@ -75,11 +62,17 @@ class SignUpViewController: UIViewController {
         txtPassword.delegate = self
         txtConPass.delegate = self
         
-        //Back Icon Navigation Using Tap Gestures
+        // Set up Firebase database reference
+        databaseRef = Database.database().reference()
+        setupUI()
+    }
+    
+    //MARK: - UI Setup
+    
+    func setupUI(){
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewTapped))
         backTapped.isUserInteractionEnabled = true
         backTapped.addGestureRecognizer(tapGesture)
-        
         
         let cornerRadius: CGFloat = 60
         let maskPath = UIBezierPath(
@@ -91,41 +84,16 @@ class SignUpViewController: UIViewController {
         maskLayer.path = maskPath.cgPath
         curveView.layer.mask = maskLayer
         
-        // Set up Firebase database reference
-        databaseRef = Database.database().reference()
+        textFieldBoreder()
+        hideKeyboard()
         
+        txtPassword.enablePasswordToggle()
+        txtConPass.enablePasswordToggle()
         
+        // Add observers for keyboard events
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    deinit {
-        // Remove keyboard event observers
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    // Function to adjust content inset when keyboard is shown
-    @objc func keyboardWillShow(_ notification: Notification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
-            scrollView.contentInset = contentInsets
-            scrollView.scrollIndicatorInsets = contentInsets
-        }
-    }
-    
-    // Function to reset content inset when keyboard is hidden
-    @objc func keyboardWillHide(_ notification: Notification) {
-        scrollView.contentInset = .zero
-        scrollView.scrollIndicatorInsets = .zero
-    }
-    
-    
-    
-    @objc func imageViewTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        return self.textFieldReturn(textField)
-    }
-    
     
     func textFieldBoreder(){
         txtName.layer.borderColor = UIColor.gray.cgColor
@@ -157,6 +125,32 @@ class SignUpViewController: UIViewController {
         txtConPass.layer.borderWidth = 1.5
         txtConPass.layer.cornerRadius = 25.0
         txtConPass.clipsToBounds = true
+    }
+
+    //MARK: - Manage Keyboard Appearance
+    
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            let contentInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
+            scrollView.contentInset = contentInsets
+            scrollView.scrollIndicatorInsets = contentInsets
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        scrollView.contentInset = .zero
+        scrollView.scrollIndicatorInsets = .zero
+    }
+    
+    deinit {
+        // Remove keyboard event observers
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    //MARK: - Button and Image Tapped Actions
+    
+    @objc func imageViewTapped() {
+        navigationController?.popViewController(animated: true)
     }
     
     @IBAction func buttonSignUpClick(_ sender: UIButton) {
@@ -250,10 +244,20 @@ class SignUpViewController: UIViewController {
         }
     }
     
+    @IBAction func buttonLoginNavigation(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    //MARK: - TextField Method
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return self.textFieldReturn(textField)
+    }
+        
+    //MARK: - Firebase Methods For Signup User
     
     // Function to check if the email already exists in Firebase
     func checkEmailExistence(email: String,empNumber: String, completion: @escaping (Bool, Bool) -> Void) {
-        
         let usersRef = Database.database().reference().child("users")
         let emailQuery = usersRef.queryOrdered(byChild: "email").queryEqual(toValue: email)
         let empNumberQuery = usersRef.queryOrdered(byChild: "empNumber").queryEqual(toValue: empNumber)
@@ -282,14 +286,11 @@ class SignUpViewController: UIViewController {
     
     // Function to sign up the user after email existence check
     func signUpUser(name: String, empNumber: String, email: String, department: String, password: String) {
-        
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if let error = error {
-                // Error occurred during sign-up
                 print("Error creating user:", error.localizedDescription)
                 self.showToastAlert(message: "Error occurred during sign-up")
             } else if let authResult = authResult {
-                // User created successfully with Firebase Authentication
                 let userID = authResult.user.uid // Get the UID from Firebase Authentication
                 let data: [String: Any] = [
                     "name": name,
@@ -302,11 +303,9 @@ class SignUpViewController: UIViewController {
                 let usersRef = Database.database().reference().child("users").child(userID)
                 usersRef.setValue(data) { error, ref in
                     if let error = error {
-                        // Error storing user data in the Realtime Database
                         print("Error storing user data:", error.localizedDescription)
                         self.showToastAlert(message: "Error storing user data")
                     } else {
-                        // User data stored successfully in the Realtime Database
                         self.alertView(title: "Successful!!", message: "User Created Successfully!", alertStyle: .alert, actionTitles: ["Login"], actionStyles: [.default], actions: [{ _ in
                             self.navigationController?.popViewController(animated: true)
                         }])
@@ -314,10 +313,5 @@ class SignUpViewController: UIViewController {
                 }
             }
         }
-    }
-    
-    @IBAction func buttonLoginNavigation(_ sender: UIButton) {
-        
-        self.navigationController?.popViewController(animated: true)
     }
 }

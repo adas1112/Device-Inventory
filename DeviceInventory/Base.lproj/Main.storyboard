@@ -1073,8 +1073,8 @@
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Not in use" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mEn-Gn-xZ2">
-                                                            <rect key="frame" x="20.000000000000007" y="241" width="96.666666666666686" height="22.333333333333314"/>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="In use" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mEn-Gn-xZ2">
+                                                            <rect key="frame" x="19.999999999999996" y="241" width="53.666666666666657" height="22.333333333333314"/>
                                                             <fontDescription key="fontDescription" name="Palatino-Roman" family="Palatino" pointSize="20"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
@@ -1095,15 +1095,16 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="IYX-NV-53P">
-                                                            <rect key="frame" x="131.66666666666666" y="241" width="30" height="30"/>
+                                                            <rect key="frame" x="93.666666666666671" y="241" width="30" height="30"/>
                                                             <color key="tintColor" red="0.41755790980000002" green="0.50240841300000005" blue="0.54307651339999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="30" id="SMv-2h-MoN"/>
-                                                                <constraint firstAttribute="height" constant="30" id="uMg-Ni-oz0"/>
+                                                                <constraint firstAttribute="width" constant="30" id="PLx-Rn-jZH"/>
+                                                                <constraint firstAttribute="height" constant="30" id="Xsg-Cf-2mb"/>
                                                             </constraints>
                                                         </imageView>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vRS-Kc-t85">
+                                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vRS-Kc-t85">
                                                             <rect key="frame" x="131.66666666666666" y="241" width="30" height="30"/>
+                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <color key="tintColor" red="0.41755790980000002" green="0.50240841300000005" blue="0.54307651339999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                             <connections>
@@ -1142,15 +1143,13 @@
                                                         <constraint firstItem="naa-BN-T69" firstAttribute="top" secondItem="FWz-uZ-apt" secondAttribute="bottom" constant="20" id="57t-XI-g6L"/>
                                                         <constraint firstItem="5dX-ea-Hna" firstAttribute="leading" secondItem="Bvv-fw-GbN" secondAttribute="leading" constant="20" id="8r8-Py-tbA"/>
                                                         <constraint firstItem="E3W-Tm-bb4" firstAttribute="leading" secondItem="osU-I0-JQD" secondAttribute="trailing" constant="10" id="A10-wh-1nL"/>
-                                                        <constraint firstItem="vRS-Kc-t85" firstAttribute="leading" secondItem="IYX-NV-53P" secondAttribute="leading" id="BfE-s1-Fhn"/>
+                                                        <constraint firstItem="IYX-NV-53P" firstAttribute="top" secondItem="naa-BN-T69" secondAttribute="bottom" constant="20" id="BPz-Sp-WBq"/>
                                                         <constraint firstAttribute="trailing" secondItem="naa-BN-T69" secondAttribute="trailing" constant="20" id="ESQ-tL-Ohg"/>
-                                                        <constraint firstAttribute="trailing" secondItem="IYX-NV-53P" secondAttribute="trailing" constant="193.33333333333334" id="Geu-Xd-3aA"/>
                                                         <constraint firstItem="E3W-Tm-bb4" firstAttribute="leading" secondItem="osU-I0-JQD" secondAttribute="trailing" constant="10" id="IXf-YA-h2p"/>
                                                         <constraint firstItem="FWz-uZ-apt" firstAttribute="leading" secondItem="Bvv-fw-GbN" secondAttribute="leading" constant="20" id="K5y-2j-VMa"/>
                                                         <constraint firstItem="NhN-jf-4Wl" firstAttribute="centerY" secondItem="Bvv-fw-GbN" secondAttribute="centerY" constant="211.16666666666669" id="Lqc-QK-dcV"/>
                                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="5dX-ea-Hna" secondAttribute="trailing" constant="20" id="PW2-Uv-APq"/>
-                                                        <constraint firstItem="IYX-NV-53P" firstAttribute="leading" secondItem="mEn-Gn-xZ2" secondAttribute="trailing" constant="15" id="Pe7-WL-2Ah"/>
-                                                        <constraint firstItem="vRS-Kc-t85" firstAttribute="bottom" secondItem="IYX-NV-53P" secondAttribute="bottom" id="UgQ-ZD-KfE"/>
+                                                        <constraint firstItem="IYX-NV-53P" firstAttribute="leading" secondItem="mEn-Gn-xZ2" secondAttribute="trailing" constant="20" id="TXC-i3-NCg"/>
                                                         <constraint firstItem="6BG-Dd-YdE" firstAttribute="leading" secondItem="mIO-0y-kCR" secondAttribute="trailing" constant="20" id="W6b-95-LbX"/>
                                                         <constraint firstItem="mEn-Gn-xZ2" firstAttribute="leading" secondItem="Bvv-fw-GbN" secondAttribute="leading" constant="20" id="brE-39-RBR"/>
                                                         <constraint firstItem="mEn-Gn-xZ2" firstAttribute="top" secondItem="naa-BN-T69" secondAttribute="bottom" constant="20" id="cDj-HC-RVm"/>
@@ -1164,11 +1163,8 @@
                                                         <constraint firstItem="6BG-Dd-YdE" firstAttribute="top" secondItem="Bvv-fw-GbN" secondAttribute="top" constant="31" id="k38-ge-Oa5"/>
                                                         <constraint firstAttribute="trailing" secondItem="6BG-Dd-YdE" secondAttribute="trailing" constant="10" id="kpk-5M-anE"/>
                                                         <constraint firstItem="6BG-Dd-YdE" firstAttribute="leading" secondItem="E3W-Tm-bb4" secondAttribute="trailing" constant="10" id="lb5-JT-RdL"/>
-                                                        <constraint firstItem="vRS-Kc-t85" firstAttribute="top" secondItem="IYX-NV-53P" secondAttribute="top" id="sYF-Js-0e6"/>
-                                                        <constraint firstItem="IYX-NV-53P" firstAttribute="top" secondItem="naa-BN-T69" secondAttribute="bottom" constant="20" id="sbr-ZB-LQ6"/>
                                                         <constraint firstItem="E3W-Tm-bb4" firstAttribute="top" secondItem="Bvv-fw-GbN" secondAttribute="top" constant="25" id="tC6-k5-GKJ"/>
                                                         <constraint firstItem="osU-I0-JQD" firstAttribute="top" secondItem="Bvv-fw-GbN" secondAttribute="top" constant="15" id="vQC-jN-6or"/>
-                                                        <constraint firstItem="vRS-Kc-t85" firstAttribute="trailing" secondItem="IYX-NV-53P" secondAttribute="trailing" id="w76-QR-Dih"/>
                                                         <constraint firstItem="5dX-ea-Hna" firstAttribute="top" secondItem="osU-I0-JQD" secondAttribute="bottom" constant="20" id="x51-o3-rYf"/>
                                                         <constraint firstItem="mEn-Gn-xZ2" firstAttribute="top" secondItem="naa-BN-T69" secondAttribute="bottom" constant="20" id="zAY-rJ-BKT"/>
                                                     </constraints>
@@ -1303,7 +1299,7 @@
         <scene sceneID="yqY-np-wTQ">
             <objects>
                 <navigationController title="Products" automaticallyAdjustsScrollViewInsets="NO" id="PFu-SR-jMG" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Accessories " image="product" id="TtO-aM-w1G"/>
+                    <tabBarItem key="tabBarItem" title="Engage Device " image="product" id="TtO-aM-w1G"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ul0-oR-7Ov">
                         <rect key="frame" x="0.0" y="47" width="375" height="44"/>

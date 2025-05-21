@@ -12,8 +12,7 @@ import AVFoundation
 
 class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     
-    var databaseRef: DatabaseReference!
-    var cameraAccessDeniedOnce = false
+    //MARK: - Outlets
     
     @IBOutlet weak var progressView: UIActivityIndicatorView!
     @IBOutlet weak var curveView: UIView!
@@ -24,27 +23,38 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     @IBOutlet weak var cameraIcon: UIImageView!
     @IBOutlet weak var circularImage: UIImageView!
     
+    //MARK: - Variabels
+    
+    var databaseRef: DatabaseReference!
+    var cameraAccessDeniedOnce = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        databaseRef = Database.database().reference()
+        progressView.isHidden = true
+        
+        fetchUserName()
+        loadProfileImageFromFirebase()
+        setupUI()
+    }
+    
+    //MARK: - UI Setup
+    
+    func setupUI(){
         circularImage.layer.cornerRadius = circularImage.frame.width / 2
         circularImage.clipsToBounds = true
         
-        // Set up camera icon view
         cameraIcon.layer.cornerRadius = cameraIcon.frame.width / 2
         cameraIcon.clipsToBounds = true
         cameraIcon.image = UIImage(named: "camera") // Replace "camera_icon" with your actual image name
         cameraIcon.layer.opacity = 0.7 // Adjust the opacity as needed
         
-        // Calculate icon size based on the device's screen width
         let screenWidth = UIScreen.main.bounds.width
-        
-        
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecodnizer:)))
         circularImage.addGestureRecognizer(tapGesture)
         circularImage.isUserInteractionEnabled = true
         
-        // Apply rounded corners to the left and right corners
         let cornerRadius: CGFloat = 40
         let maskPath = UIBezierPath(
             roundedRect: curveView.bounds,
@@ -55,7 +65,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         maskLayer.path = maskPath.cgPath
         curveView.layer.mask = maskLayer
         
-        
         EditProfileButton.setImage(UIImage(named: "edit"), for: .normal)
         EditProfileButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -15)
         
@@ -63,21 +72,15 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         changePass.imageEdgeInsets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -15)
         
         logOut.setImage(UIImage(named: "logout"), for: .normal)
-        logOut.tintColor = UIColor.red // Change color as needed
+        logOut.tintColor = UIColor.red
         logOut.imageEdgeInsets = UIEdgeInsets(top: 0, left: -5, bottom: 0, right: -15)
-        
-        databaseRef = Database.database().reference()
-        fetchUserName()
-        
-        progressView.isHidden = true
-        
-        loadProfileImageFromFirebase()
         
     }
     
+    //MARK: - Fetch Data From Firebase
+    
     func loadProfileImageFromFirebase() {
         progressView.isHidden = false
-        
         progressView.startAnimating()
         
         if let currentUser = Auth.auth().currentUser {
@@ -94,7 +97,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
                                 self.circularImage.image = image
                                 self.progressView.stopAnimating()
                                 self.progressView.isHidden = true // Hide activity indicator
-                                
                             }
                         }
                     }.resume()
@@ -115,7 +117,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
             let userID = currentUser.uid
             let usersRef = databaseRef.child("users").child(userID)
             
-            // Observe changes to the user's data
             usersRef.observe(.value) { snapshot in
                 if let userData = snapshot.value as? [String: Any],
                    let userName = userData["name"] as? String {
@@ -126,6 +127,8 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
             }
         }
     }
+    
+    //MARK: - Button and Image Tapped Actions
     
     @objc func imageTapped(tapGestureRecodnizer: UITapGestureRecognizer){
         let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
@@ -150,15 +153,11 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         
         // Present the action sheet
         present(actionSheet, animated: true, completion: nil)
-        
     }
     
     @IBAction func editInformationClick(_ sender: UIButton) {
-        
         let ProfileVC = self.storyboard?.instantiateViewController(withIdentifier: "EditProfileViewController") as! EditProfileViewController
-        //        ProfileVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(ProfileVC, animated: true)
-        
     }
     
     @IBAction func changePasswordClick(_ sender: UIButton) {
@@ -167,7 +166,6 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     }
     
     @IBAction func logoutClick(_ sender: Any) {
-        
         // Create an alert controller
         let alertController = UIAlertController(title: "Logout", message: "Are you sure you want to logout?", preferredStyle: .alert)
         
@@ -186,6 +184,7 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
         present(alertController, animated: true, completion: nil)
         
     }
+    
     func performLogout() {
         do {
             try Auth.auth().signOut()
@@ -202,8 +201,11 @@ class ProfileViewController: UIViewController, UINavigationControllerDelegate {
     }
 }
 
+//MARK: - Extension
 
 extension ProfileViewController: UINavigationBarDelegate, UIImagePickerControllerDelegate{
+    //MARK: - Manage Camera and Permissions
+    
     func openCamera() {
         let cameraAuthorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
         switch cameraAuthorizationStatus {
@@ -238,6 +240,8 @@ extension ProfileViewController: UINavigationBarDelegate, UIImagePickerControlle
         present(alert, animated: true, completion: nil)
     }
     
+    //MARK: - Image Picker and Manage Gallery
+    
     func showImagePicker() {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
             let imagePicker = UIImagePickerController()
@@ -250,7 +254,6 @@ extension ProfileViewController: UINavigationBarDelegate, UIImagePickerControlle
         }
     }
     
-    
     func openGallery(){
         if  UIImagePickerController.isSourceTypeAvailable(.savedPhotosAlbum){
             let picker = UIImagePickerController()
@@ -260,6 +263,7 @@ extension ProfileViewController: UINavigationBarDelegate, UIImagePickerControlle
             present(picker, animated: true)
         }
     }
+    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         if let img = info[.editedImage] as? UIImage {
             circularImage.image = img
@@ -279,8 +283,9 @@ extension ProfileViewController: UINavigationBarDelegate, UIImagePickerControlle
         }
         picker.dismiss(animated: true)
     }
-}
-extension ProfileViewController{
+    
+    //MARK: - Upload And Save Image On Firebase
+    
     func uploadImage(_ image:UIImage, completion: @escaping ((_ url: URL?) -> ())){
         if let currentUser = Auth.auth().currentUser {
             let userID = currentUser.uid
@@ -302,6 +307,7 @@ extension ProfileViewController{
             }
         }
     }
+    
     func saveImage(profileURL: URL, completion: @escaping ((_ success: Bool) -> Void)) {
         if let currentUser = Auth.auth().currentUser {
             let userID = currentUser.uid
@@ -322,4 +328,3 @@ extension ProfileViewController{
         }
     }
 }
-
